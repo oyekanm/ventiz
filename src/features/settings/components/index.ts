@@ -1,0 +1,10 @@
+"use client"
+
+export {default as MyAccount} from "./myAccount"
+export {default as IntegrationsTab} from "./integrations"
+export {default as NotificationTab} from "./notifications"
+export {default as BillingsTab} from "./billings"
+export {default as SecuritySettings} from "./securitySettings"
+export {default as EventTicketingSettings} from "./eventTicketing"
+export {default as PayoutCreateForm} from "./payoutCreateForm"
+export {default as SettingsContainer} from "./settingsContainer"
