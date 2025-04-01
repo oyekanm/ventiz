@@ -15,10 +15,10 @@ import { fetchAllData } from "@/lib/fetchAll"
 
 async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const baseURL = process.env.NODE_ENV === 'production'
-  ? 'https://yourdomain.com'
+  ? 'https://ventiz.vercel.app'
   : 'http://localhost:3000';
 
-`${baseURL}/api/admin`
+// `${baseURL}/api/admin`
 // const auth = verifyAuth();
 // fetchAllData
 const appData = await fetchAllData();

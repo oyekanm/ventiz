@@ -3,7 +3,7 @@ import instance from '@/services/api-instance';
 
 export async function fetchAllData() {
   const baseURL = process.env.NODE_ENV === 'production'
-  ? 'https://yourdomain.com'
+  ? 'https://ventiz.vercel.app'
   : 'http://localhost:3000';
   try {
     const [
