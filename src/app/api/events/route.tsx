@@ -178,19 +178,19 @@ export async function POST(req: NextRequest) {
 
         if (res.status !== 201) {
             return NextResponse.json(
-                { error: data.message },
+                { error: data.message || "Failed to create event" },
                 { status: res.status }
             );
         }
         // revalidateTag('events');
 
         // // Also revalidate the paths where this data is used
-        // revalidatePath('/events');
-        // revalidatePath('/');
-        // revalidatePath('/ticket-sales');
+        revalidatePath('/events');
+        revalidatePath('/');
+        revalidatePath('/ticket-sales');
         return NextResponse.json({ message: data.message });
     } catch (error) {
-        console.log(error);
+        console.error("POST Event Error:", error);
         return NextResponse.json(
             { error: "Internal Server Error" },
             { status: 500 }
@@ -221,21 +221,32 @@ export async function PATCH(req: NextRequest) {
                 'Content-Type': 'application/json',
                 Authorization: `${token}`
             },
-            body: JSON.stringify(body)
+            body: JSON.stringify(body),
+            signal: AbortSignal.timeout(15000)
         })
         const data = await res.json();
 
         console.log(data)
 
-        if (res.status !== 200) {
+         if (res.status !== 200) {
             return NextResponse.json(
-                { error: data.error },
+                { error: data.error || "Failed to update event" },
                 { status: res.status }
             );
         }
+        revalidatePath('/events');
+        revalidatePath(`/events/${id}`);
+        revalidatePath('/');
         return NextResponse.json({ message: data.message });
     } catch (error) {
-        console.log(error);
+        console.error("PATCH Event Error:", error);
+         // Check for timeout errors
+         if (error instanceof DOMException && error.name === 'AbortError') {
+            return NextResponse.json(
+                { error: "Request timed out" },
+                { status: 504 }
+            );
+        }
         return NextResponse.json(
             { error: "Internal Server Error" },
             { status: 500 }

@@ -181,12 +181,20 @@ const EventCreateForm = ({ close }: ModalProps) => {
         }
         setSending(true)
         try {
+               const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 20000);
             const response = await axios.post("/api/events", eventData, {
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${user.token}`
-                }
-            })
+                },
+                signal: controller.signal
+            });
+            
+            // Clear the timeout since request completed
+            clearTimeout(timeoutId);
+
+
             console.log(response)
             if (response.data.message === "success") {
                 setSending(false)
@@ -199,7 +207,7 @@ const EventCreateForm = ({ close }: ModalProps) => {
                 close()
             }
         } catch (error: any) {
-            // console.log(error)
+            console.error('Form submission error:', error);
             toast({
                 status: 'error',
                 text: error.response.data.error,

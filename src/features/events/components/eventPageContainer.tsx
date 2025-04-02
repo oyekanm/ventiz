@@ -21,9 +21,9 @@ const EventPageContainer = () => {
         fallbackData:initialData.events || [],
         refreshInterval: 5000,
         // Enable refetching on window focus
-        revalidateOnFocus: true,
+        // revalidateOnFocus: true,
         // Enable refetching on network reconnection
-        revalidateOnReconnect: true,
+        // revalidateOnReconnect: true,
         // Dedupe requests within this time frame
         // dedupingInterval: 1000
     });
