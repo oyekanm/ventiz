@@ -43,7 +43,7 @@ export default function SingleEventDetail({ eventDetail }: Props) {
         fallbackData: [],
         refreshInterval: 30000,
     });
-    // console.log(isLoading, event, attend)
+    console.log(isLoading, event)
 
     const [open, setOpen] = useState(false)
     const [viewAttendees, setViewAttendees] = useState(false)
@@ -108,7 +108,7 @@ export default function SingleEventDetail({ eventDetail }: Props) {
             document.body.style.overflow = "scroll";
         }
     }
-    console.log(events.filter(evt => evt.eventType === event?.eventType), events)
+    // console.log(events.filter(evt => evt.eventType === event?.eventType), events)
     const activateDelete = async () => {
         try {
             const response = await axios.get(`/api/events?type=delete-event?eventId=${eventDetail}&creatorId=${event?.creatorId}`)

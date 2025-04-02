@@ -15,11 +15,17 @@ interface eventsProps {
 
 const EventPageContainer = () => {
     const {initialData} = useAppContext()
-    const options = ["physical", "virtual"];
+    const options = ["all","physical", "virtual"];
 
     const { data: events = [],isLoading } = useSWR('all-events', BrowseAllEvents, {
         fallbackData:initialData.events || [],
-        refreshInterval: 30000
+        refreshInterval: 5000,
+        // Enable refetching on window focus
+        revalidateOnFocus: true,
+        // Enable refetching on network reconnection
+        revalidateOnReconnect: true,
+        // Dedupe requests within this time frame
+        // dedupingInterval: 1000
     });
 
     // const [events, setEvents] = useState<EventData[]>(initialData.events);
@@ -28,7 +34,7 @@ const EventPageContainer = () => {
     const [activeTab, setActiveTab] = useState("view")
     const [searchTerm, setSearchTerm] = useState("");
     // const [categoryFilter, setCategoryFilter] = useState<string[]>([]);
-    const [categoryFilter, setCategoryFilter] = useState<string>("");
+    const [categoryFilter, setCategoryFilter] = useState<string>("all");
     const [openSelect, setOpenSelect] = useState(false)
     const [currentPage, setCurrentPage] = useState(1);
 
@@ -61,7 +67,12 @@ const EventPageContainer = () => {
             // return item.eventType.toLowerCase().includes(categoryFilter.toLowerCase())
             return item.name.toLowerCase().includes(searchTerm.toLowerCase())
             // return newFilter || matchesSearch;
-        }).filter(item=> item.eventType.toLowerCase().includes(categoryFilter.toLowerCase()))
+        }).filter(item=> {
+            if(categoryFilter.toLowerCase() === "all"){
+                return item
+            }
+            return item.eventType.toLowerCase().includes(categoryFilter.toLowerCase())
+        })
     // }, [searchTerm, categoryFilter])
     }, [events, searchTerm, categoryFilter])
 

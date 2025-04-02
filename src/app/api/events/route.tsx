@@ -1,6 +1,7 @@
 import { verifyAuth } from "@/utils/verifyAuth";
 import axios from "axios";
 import { error } from "console";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -29,12 +30,12 @@ export async function GET(req: NextRequest) {
     // const token = req.headers.get("Authorization") /attendees/{eventId} /get-event/${id}
 
 
-    console.log(type,creatorId)
+    console.log(type, creatorId)
     console.log(auth)
-  
+
     if (creatorId) {
         console.log(auth)
-   
+
         try {
             // Fetch data from your backend API
             const res = await fetch(`${url}/${type}&creatorId=${creatorId}`, {
@@ -43,6 +44,7 @@ export async function GET(req: NextRequest) {
                     'Content-Type': 'application/json',
                     Authorization: `${token}`
                 },
+               
             })
             const data = await res.json();
 
@@ -82,6 +84,10 @@ export async function GET(req: NextRequest) {
                     'Content-Type': 'application/json',
                     Authorization: `${token}`
                 },
+                cache:"no-store",
+                next:{
+                    revalidate:0
+                }
             })
             const data = await res.json();
 
@@ -120,6 +126,10 @@ export async function GET(req: NextRequest) {
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `${token}`
+            },
+            cache:"no-store",
+            next:{
+                revalidate:0
             },
         })
         const data = await res.json();
@@ -172,6 +182,12 @@ export async function POST(req: NextRequest) {
                 { status: res.status }
             );
         }
+        revalidateTag('events');
+
+        // Also revalidate the paths where this data is used
+        revalidatePath('/events');
+        revalidatePath('/');
+        revalidatePath('/ticket-sales');
         return NextResponse.json({ message: data.message });
     } catch (error) {
         console.log(error);

@@ -13,69 +13,69 @@ const TicketSales = () => {
   const { initialData } = useAppContext()
 
 
-  // const { data: allBookings = [] } = useSWR('all-bookings', BrowseAllBooking, { 
-  //   suspense: true, 
-  //   // refreshInterval: 60000,
-  //   fallbackData:initialData.bookings
-  //  });
-  //  const { data: events = [] } = useSWR('all-events', BrowseAllEvents, { 
-  //   suspense: true,
-  //   fallbackData:initialData.events
-  //  });
-  //  const { data: supports = [] } = useSWR('all-supports', BrowseAllSupport, { 
-  //   suspense: true, 
-  //   // refreshInterval: 60000,
-  //   fallbackData:initialData.supports
-  //  });
+  const { data: allBookings = [] } = useSWR('all-bookings', BrowseAllBooking, { 
+    // suspense: true, 
+    // refreshInterval: 60000,
+    fallbackData:initialData.bookings
+   });
+   const { data: events = [] } = useSWR('all-events', BrowseAllEvents, { 
+    // suspense: true,
+    fallbackData:initialData.events
+   });
+   const { data: supports = [] } = useSWR('all-supports', BrowseAllSupport, { 
+    // suspense: true, 
+    // refreshInterval: 60000,
+    fallbackData:initialData.supports
+   });
 
   const [loading, setLoading] = useState(false)
-  const [allBookings, setAllBookings] = useState<Bookings[]>([])
-  const [supports, setSupports] = useState<dispute[]>([])
-  const [events, setEvents] = useState<EventData[]>([]);
+  // const [allBookings, setAllBookings] = useState<Bookings[]>([])
+  // const [supports, setSupports] = useState<dispute[]>([])
+  // const [events, setEvents] = useState<EventData[]>([]);
 
 
-  useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        setLoading(true);
-        const bookings = await BrowseAllBooking();
-        //   console.log(data)
-        setAllBookings(bookings)
-        setLoading(false)
-      } catch (error) {
-        console.error("Error fetching events:", error);
-        setLoading(false)
-      }
-    };
+  // useEffect(() => {
+  //   const fetchEvents = async () => {
+  //     try {
+  //       setLoading(true);
+  //       const bookings = await BrowseAllBooking();
+  //       //   console.log(data)
+  //       setAllBookings(bookings)
+  //       setLoading(false)
+  //     } catch (error) {
+  //       console.error("Error fetching events:", error);
+  //       setLoading(false)
+  //     }
+  //   };
 
-    fetchEvents();
-  }, []);
-  useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const data = await BrowseAllEvents();
-        //   console.log(data)
-        setEvents(data);
-      } catch (error) {
-        console.error("Error fetching events:", error);
-      }
-    };
+  //   fetchEvents();
+  // }, []);
+  // useEffect(() => {
+  //   const fetchEvents = async () => {
+  //     try {
+  //       const data = await BrowseAllEvents();
+  //       //   console.log(data)
+  //       setEvents(data);
+  //     } catch (error) {
+  //       console.error("Error fetching events:", error);
+  //     }
+  //   };
 
-    fetchEvents();
-  }, []);
-  useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const support: any = await BrowseAllSupport();
-        //   console.log(data)
-        setSupports(support)
-      } catch (error) {
-        console.error("Error fetching events:", error);
-      }
-    };
+  //   fetchEvents();
+  // }, []);
+  // useEffect(() => {
+  //   const fetchEvents = async () => {
+  //     try {
+  //       const support: any = await BrowseAllSupport();
+  //       //   console.log(data)
+  //       setSupports(support)
+  //     } catch (error) {
+  //       console.error("Error fetching events:", error);
+  //     }
+  //   };
 
-    fetchEvents();
-  }, []);
+  //   fetchEvents();
+  // }, []);
 
   const pending = supports?.filter(item => item.status === "pending")
   const revenue = useMemo(() => {

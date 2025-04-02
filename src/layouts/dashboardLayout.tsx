@@ -11,7 +11,11 @@ import AppProvider from '@/context/appContext'
 import ToastProvider from "@/features/toast/components/toastProvider"
 import { fetchAllData } from "@/lib/fetchAll"
 
-// 
+// Set dynamic metadata for the page
+export const dynamic = 'force-dynamic';
+
+// Set revalidation settings to ensure data freshness
+export const revalidate = 0; 
 
 async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const baseURL = process.env.NODE_ENV === 'production'
