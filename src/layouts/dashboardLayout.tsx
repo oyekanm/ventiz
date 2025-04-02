@@ -17,7 +17,7 @@ import { fetchAllData } from "@/lib/fetchAll"
 // // Set revalidation settings to ensure data freshness
 // export const revalidate = 0; 
 
-// export const dynamic = 'auto';
+export const dynamic = 'auto';
 // // Use a more moderate revalidation time 
 export const revalidate = 30; 
 
