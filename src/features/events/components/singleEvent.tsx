@@ -17,11 +17,11 @@ import useToast from '@/hooks/useToast';
 
 type Props = {
     eventDetail: string,
-    // eventD: any,
-    // attendee: any
+    eventD?: any,
+    attendee?: any
 }
 
-export default function SingleEventDetail({ eventDetail }: Props) {
+export default function SingleEventDetail({ eventDetail,attendee,eventD }: Props) {
     const { initialData } = useAppContext()
     const route = useRouter()
     const toast = useToast()
@@ -43,7 +43,7 @@ export default function SingleEventDetail({ eventDetail }: Props) {
     //     fallbackData: [],
     //     refreshInterval: 30000,
     // });
-    console.log(isLoading, event)
+    console.log(isLoading, eventDetail)
 
     const [open, setOpen] = useState(false)
     const [viewAttendees, setViewAttendees] = useState(false)
@@ -53,8 +53,9 @@ export default function SingleEventDetail({ eventDetail }: Props) {
             console.log("first one")
             try {
                 setIsLoading(true)
-                const data = await BrowseAllEvents();
-                setEvents(data);
+                const data = await GetSingleEvent(eventDetail);
+                setEvent(data);
+              
                 setIsLoading(false)
             } catch (error) {
                 console.error("Error fetching events:", error);
@@ -63,13 +64,13 @@ export default function SingleEventDetail({ eventDetail }: Props) {
         };
 
         fetchEvents();
-    }, []);
+    }, [eventDetail]);
     useEffect(() => {
         const fetchEvents = async () => {
             console.log("first")
             try {
-                const data = await GetSingleEvent(eventDetail);
-                setEvent(data);
+                const data = await BrowseAllEvents();
+                setEvents(data);
             } catch (error) {
                 console.error("Error fetching events:", error);
             }
@@ -88,7 +89,7 @@ export default function SingleEventDetail({ eventDetail }: Props) {
         };
 
         fetchEvents();
-    }, []);
+    }, [eventDetail]);
 
     const openModal = () => {
         setOpen(!open)
@@ -146,7 +147,7 @@ export default function SingleEventDetail({ eventDetail }: Props) {
 
 
     const newDate = event ? combineDateAndTime(event?.startDate, event?.startTime) : ""
-    const format = event ? formatDateWithGMT(event?.startdate ? newDate : "2025-03-26T13:24:54.596Z").split(",") : ""
+    const format = event ? formatDateWithGMT(event?.startDate ? newDate : "2025-03-26T13:24:54.596Z").split(",") : ""
     // console.log(newDate,format,event.startTime,)
 
     // console.log(convert12to24(event.startTime), event.startTime)
@@ -307,10 +308,10 @@ export default function SingleEventDetail({ eventDetail }: Props) {
                 )}
             </div>
             {/* Similar events */}
-            {events.filter(evt => evt.eventType === event?.eventType).filter(evt => evt._id !== event._id).length > 0 && (
+            {events?.filter(evt => evt.eventType === event?.eventType)?.filter(evt => evt._id !== event._id).length > 0 && (
                 <SectionBlock xt='see all events' link='/events' title="Explore other events">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        {events.filter(evt => evt.eventType === event?.eventType).filter(evt => evt._id !== event._id).slice(0, 3).map(event => (
+                        {events?.filter(evt => evt.eventType === event?.eventType)?.filter(evt => evt._id !== event._id).slice(0, 3).map(event => (
                             <EventCard key={event._id} {...event} />
                         ))}
                     </div>

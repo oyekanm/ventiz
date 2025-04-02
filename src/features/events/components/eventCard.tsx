@@ -8,7 +8,7 @@ import React from 'react'
 export default function EventCard(event: EventData) {
   const newDate = combineDateAndTime(event.startDate, event.startTime)
   // console.log(formatDateWithGMT(event.startTime))
-  console.log(event.eventType, event._id)
+  // console.log(event.eventType, event._id)
 
   return (
     <div className="">

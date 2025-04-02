@@ -12,6 +12,8 @@ export const dynamic = 'force-dynamic';
 const EventDetailsPage = async ({ params }: Props) => {
   const { eventDetail } =  params
 
+  
+
   // const data = await GetSingleEvent(eventDetail)
   // const attend = await GetSingleEventAttendies(eventDetail);
   
