@@ -10,10 +10,10 @@ export const metadata: Metadata = {
 };
 
 // // Set dynamic metadata for the page
-// export const dynamic = 'force-dynamic';
+export const dynamic = 'force-dynamic';
 
 // // Set revalidation settings to ensure data freshness
-// export const revalidate = 0; 
+export const revalidate = 0; 
 
 export default async function RootLayout({
   children,

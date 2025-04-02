@@ -84,7 +84,10 @@ export async function GET(req: NextRequest) {
                     'Content-Type': 'application/json',
                     Authorization: `${token}`
                 },
-                cache:"no-store"
+                cache:"no-store",
+                next:{
+                    revalidate:0
+                }
             })
             const data = await res.json();
 
@@ -124,7 +127,10 @@ export async function GET(req: NextRequest) {
                 'Content-Type': 'application/json',
                 Authorization: `${token}`
             },
-            cache:"no-store"
+            cache:"no-store",
+            next:{
+                revalidate:0
+            }
         })
         const data = await res.json();
 
