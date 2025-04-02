@@ -43,7 +43,7 @@ export default function SingleEventDetail({ eventDetail,attendee,eventD }: Props
     //     fallbackData: [],
     //     refreshInterval: 30000,
     // });
-    console.log(isLoading, eventDetail)
+    console.log(isLoading, eventDetail,eventD)
 
     const [open, setOpen] = useState(false)
     const [viewAttendees, setViewAttendees] = useState(false)
