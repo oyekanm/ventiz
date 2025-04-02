@@ -26,8 +26,8 @@ export default function SingleEventDetail({ eventDetail,attendee,eventD }: Props
     const route = useRouter()
     const toast = useToast()
     const [events, setEvents] = useState<EventData[]>(initialData.events);
-    const [event, setEvent] = useState<EventData>();
-    const [attend, setAttend] = useState<Attendees[]>()
+    const [event, setEvent] = useState<EventData>(eventD);
+    const [attend, setAttend] = useState<Attendees[]>(attendee)
     const [isLoading, setIsLoading] = useState(false)
     // const { data: events = [] } = useSWR('all-events', BrowseAllEvents,
     //     {
@@ -43,7 +43,7 @@ export default function SingleEventDetail({ eventDetail,attendee,eventD }: Props
     //     fallbackData: [],
     //     refreshInterval: 30000,
     // });
-    console.log(isLoading, eventDetail,eventD)
+    console.log(isLoading, eventDetail,eventD,attendee)
 
     const [open, setOpen] = useState(false)
     const [viewAttendees, setViewAttendees] = useState(false)
