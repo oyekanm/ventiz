@@ -214,7 +214,6 @@ export async function PATCH(req: NextRequest) {
                 Authorization: `${token}`
             },
             body: JSON.stringify(body),
-            signal: AbortSignal.timeout(15000)
         })
         const data = await res.json();
 
