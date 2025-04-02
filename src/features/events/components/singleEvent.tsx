@@ -12,7 +12,7 @@ import { useAppContext } from '@/context/appContext';
 import { combineDateAndTime, convert12to24, formatDateWithAMPM, formatDateWithGMT, formatRelativeTime } from '@/utils/dateFormatter';
 import EventCard from './eventCard';
 import ViewAttendees from './viewAttendees';
-import useSWR from 'swr';
+import useSWR, { mutate } from 'swr';
 import useToast from '@/hooks/useToast';
 
 type Props = {
@@ -118,6 +118,7 @@ export default function SingleEventDetail({ eventDetail,attend,event }: Props) {
                     text: response.data.data.message,
                     duration: 3000,
                 });
+                mutate("all-events")
                 route.push("/events")
             }
         } catch (error) {
