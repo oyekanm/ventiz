@@ -19,7 +19,7 @@ import { fetchAllData } from "@/lib/fetchAll"
 
 // export const dynamic = 'auto';
 // // Use a more moderate revalidation time 
-// export const revalidate = 20; 
+export const revalidate = 30; 
 
 async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const baseURL = process.env.NODE_ENV === 'production'

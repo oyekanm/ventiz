@@ -1,8 +1,4 @@
 import { EventPageContainer } from '@/features/events/components';
-import { fetchAllData } from '@/lib/fetchAll';
-import { authOptions } from '@/utils/authOptions';
-import { getServerSession } from 'next-auth';
-import { cookies } from 'next/headers';
 
 const EventsManagement =  async() => {
   // const session = await getServerSession(authOptions);

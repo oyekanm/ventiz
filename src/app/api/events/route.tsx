@@ -84,10 +84,6 @@ export async function GET(req: NextRequest) {
                     'Content-Type': 'application/json',
                     Authorization: `${token}`
                 },
-                cache:"no-store",
-                // next:{
-                //     revalidate:0
-                // }
             })
             const data = await res.json();
 
@@ -127,10 +123,6 @@ export async function GET(req: NextRequest) {
                 'Content-Type': 'application/json',
                 Authorization: `${token}`
             },
-            cache:"no-store",
-            // next:{
-            //     revalidate:0
-            // },
         })
         const data = await res.json();
 
@@ -185,9 +177,9 @@ export async function POST(req: NextRequest) {
         // revalidateTag('events');
 
         // // Also revalidate the paths where this data is used
-        revalidatePath('/events');
-        revalidatePath('/');
-        revalidatePath('/ticket-sales');
+        // revalidatePath('/events');
+        // revalidatePath('/');
+        // revalidatePath('/ticket-sales');
         return NextResponse.json({ message: data.message });
     } catch (error) {
         console.error("POST Event Error:", error);
@@ -234,9 +226,9 @@ export async function PATCH(req: NextRequest) {
                 { status: res.status }
             );
         }
-        revalidatePath('/events');
-        revalidatePath(`/events/${id}`);
-        revalidatePath('/');
+        // revalidatePath('/events');
+        // revalidatePath(`/events/${id}`);
+        // revalidatePath('/');
         return NextResponse.json({ message: data.message });
     } catch (error) {
         console.error("PATCH Event Error:", error);
