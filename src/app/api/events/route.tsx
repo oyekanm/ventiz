@@ -128,9 +128,9 @@ export async function GET(req: NextRequest) {
                 Authorization: `${token}`
             },
             cache:"no-store",
-            next:{
-                revalidate:0
-            },
+            // next:{
+            //     revalidate:0
+            // },
         })
         const data = await res.json();
 

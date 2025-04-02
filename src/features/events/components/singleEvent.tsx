@@ -17,17 +17,17 @@ import useToast from '@/hooks/useToast';
 
 type Props = {
     eventDetail: string,
-    eventD?: any,
-    attendee?: any
+    event?: any,
+    attend?: any
 }
 
-export default function SingleEventDetail({ eventDetail,attendee,eventD }: Props) {
+export default function SingleEventDetail({ eventDetail,attend,event }: Props) {
     const { initialData } = useAppContext()
     const route = useRouter()
     const toast = useToast()
     const [events, setEvents] = useState<EventData[]>(initialData.events);
-    const [event, setEvent] = useState<EventData>(eventD);
-    const [attend, setAttend] = useState<Attendees[]>(attendee)
+    // const [event, setEvent] = useState<EventData>(eventD);
+    // const [attend, setAttend] = useState<Attendees[]>(attendee)
     const [isLoading, setIsLoading] = useState(false)
     // const { data: events = [] } = useSWR('all-events', BrowseAllEvents,
     //     {
@@ -43,28 +43,28 @@ export default function SingleEventDetail({ eventDetail,attendee,eventD }: Props
     //     fallbackData: [],
     //     refreshInterval: 30000,
     // });
-    console.log(isLoading, eventDetail,eventD,attendee)
+    console.log(isLoading, eventDetail,event,attend)
 
     const [open, setOpen] = useState(false)
     const [viewAttendees, setViewAttendees] = useState(false)
 
-    useEffect(() => {
-        const fetchEvents = async () => {
-            console.log("first one")
-            try {
-                setIsLoading(true)
-                const data = await GetSingleEvent(eventDetail);
-                setEvent(data);
+    // useEffect(() => {
+    //     const fetchEvents = async () => {
+    //         console.log("first one")
+    //         try {
+    //             setIsLoading(true)
+    //             const data = await GetSingleEvent(eventDetail);
+    //             setEvent(data);
               
-                setIsLoading(false)
-            } catch (error) {
-                console.error("Error fetching events:", error);
-                setIsLoading(false)
-            }
-        };
+    //             setIsLoading(false)
+    //         } catch (error) {
+    //             console.error("Error fetching events:", error);
+    //             setIsLoading(false)
+    //         }
+    //     };
 
-        fetchEvents();
-    }, [eventDetail]);
+    //     fetchEvents();
+    // }, [eventDetail]);
     useEffect(() => {
         const fetchEvents = async () => {
             console.log("first")
@@ -78,18 +78,18 @@ export default function SingleEventDetail({ eventDetail,attendee,eventD }: Props
 
         fetchEvents();
     }, []);
-    useEffect(() => {
-        const fetchEvents = async () => {
-            try {
-                const data = await GetSingleEventAttendies(eventDetail);
-                setAttend(data);
-            } catch (error) {
-                console.error("Error fetching events:", error);
-            }
-        };
+    // useEffect(() => {
+    //     const fetchEvents = async () => {
+    //         try {
+    //             const data = await GetSingleEventAttendies(eventDetail);
+    //             setAttend(data);
+    //         } catch (error) {
+    //             console.error("Error fetching events:", error);
+    //         }
+    //     };
 
-        fetchEvents();
-    }, [eventDetail]);
+    //     fetchEvents();
+    // }, [eventDetail]);
 
     const openModal = () => {
         setOpen(!open)
@@ -137,13 +137,13 @@ export default function SingleEventDetail({ eventDetail,attendee,eventD }: Props
 
     // console.log(event === undefined)
 
-    if (!event) {
-        return (
-            <div>
-                <p>event is empty</p>
-            </div>
-        )
-    };
+    // if (!event) {
+    //     return (
+    //         <div>
+    //             <p>event is empty</p>
+    //         </div>
+    //     )
+    // };
 
 
     const newDate = event ? combineDateAndTime(event?.startDate, event?.startTime) : ""

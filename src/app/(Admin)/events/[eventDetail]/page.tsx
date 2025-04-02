@@ -20,7 +20,7 @@ const EventDetailsPage = async ({ params }: Props) => {
   // console.log(eventDetail, data, attend)
   return (
     <SingleEventDetail 
-    attendee={attend} eventD={data}
+     attend={attend} event={data}
      eventDetail={eventDetail} />
   );
 };
