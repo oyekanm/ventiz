@@ -25,72 +25,70 @@ export default function SingleEventDetail({ eventDetail }: Props) {
     const { initialData } = useAppContext()
     const route = useRouter()
     const toast = useToast()
-    // const [events, setEvents] = useState<EventData[]>(initialData.events);
-    // const [event, setEvent] = useState<EventData>(eventD);
-    // const [attend, setAttend] = useState<Attendees[]>(attendee)
-    const [eventLoading, setEventLoading] = useState(false)
-    const { data: events = [] } = useSWR('all-events', BrowseAllEvents,
-        {
-            fallbackData: initialData.events
-        });
+    const [events, setEvents] = useState<EventData[]>(initialData.events);
+    const [event, setEvent] = useState<EventData>();
+    const [attend, setAttend] = useState<Attendees[]>()
+    const [isLoading, setIsLoading] = useState(false)
+    // const { data: events = [] } = useSWR('all-events', BrowseAllEvents,
+    //     {
+    //         fallbackData: initialData.events
+    //     });
 
-    const { data: event, error, isLoading } = useSWR('single-event', () => GetSingleEvent(eventDetail),
-        {
-            refreshInterval: 5000,
-            fallbackData: {}
-        });
-    const { data: attend } = useSWR('single-event-attendee', () => GetSingleEventAttendies(eventDetail), {
-        fallbackData: [],
-        refreshInterval: 30000,
-    });
+    // const { data: event, error, isLoading } = useSWR('single-event', () => GetSingleEvent(eventDetail),
+    //     {
+    //         refreshInterval: 5000,
+    //         fallbackData: {}
+    //     });
+    // const { data: attend } = useSWR('single-event-attendee', () => GetSingleEventAttendies(eventDetail), {
+    //     fallbackData: [],
+    //     refreshInterval: 30000,
+    // });
     console.log(isLoading, event)
 
     const [open, setOpen] = useState(false)
     const [viewAttendees, setViewAttendees] = useState(false)
 
-    // useEffect(() => {
-    //     const fetchEvents = async () => {
-    //         console.log("first one")
-    //         try {
-    //             setEventLoading(true)
-    //             const data = await BrowseAllEvents();
-    //             setEvents(data);
-    //             setEventLoading(false)
-    //         } catch (error) {
-    //             console.error("Error fetching events:", error);
-    //             setEventLoading(false)
-    //         }
-    //     };
+    useEffect(() => {
+        const fetchEvents = async () => {
+            console.log("first one")
+            try {
+                setIsLoading(true)
+                const data = await BrowseAllEvents();
+                setEvents(data);
+                setIsLoading(false)
+            } catch (error) {
+                console.error("Error fetching events:", error);
+                setIsLoading(false)
+            }
+        };
 
-    //     fetchEvents();
-    // }, []);
-    // useEffect(() => {
-    //     const fetchEvents = async () => {
-    //         console.log("first")
-    //         try {
-    //             const data = await GetSingleEvent(eventDetail);
-    //             setEvent(data);
-    //         } catch (error) {
-    //             console.error("Error fetching events:", error);
-    //             setEventLoading(false)
-    //         }
-    //     };
+        fetchEvents();
+    }, []);
+    useEffect(() => {
+        const fetchEvents = async () => {
+            console.log("first")
+            try {
+                const data = await GetSingleEvent(eventDetail);
+                setEvent(data);
+            } catch (error) {
+                console.error("Error fetching events:", error);
+            }
+        };
 
-    //     fetchEvents();
-    // }, []);
-    // useEffect(() => {
-    //     const fetchEvents = async () => {
-    //         try {
-    //             const data = await GetSingleEventAttendies(eventDetail);
-    //             setAttend(data);
-    //         } catch (error) {
-    //             console.error("Error fetching events:", error);
-    //             setEventLoading(false)
-    //         }
-    //     };
+        fetchEvents();
+    }, []);
+    useEffect(() => {
+        const fetchEvents = async () => {
+            try {
+                const data = await GetSingleEventAttendies(eventDetail);
+                setAttend(data);
+            } catch (error) {
+                console.error("Error fetching events:", error);
+            }
+        };
 
-    //     fetchEvents();
-    // }, []);
+        fetchEvents();
+    }, []);
 
     const openModal = () => {
         setOpen(!open)

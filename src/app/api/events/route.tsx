@@ -182,12 +182,12 @@ export async function POST(req: NextRequest) {
                 { status: res.status }
             );
         }
-        revalidateTag('events');
+        // revalidateTag('events');
 
-        // Also revalidate the paths where this data is used
-        revalidatePath('/events');
-        revalidatePath('/');
-        revalidatePath('/ticket-sales');
+        // // Also revalidate the paths where this data is used
+        // revalidatePath('/events');
+        // revalidatePath('/');
+        // revalidatePath('/ticket-sales');
         return NextResponse.json({ message: data.message });
     } catch (error) {
         console.log(error);
