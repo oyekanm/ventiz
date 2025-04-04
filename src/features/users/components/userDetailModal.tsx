@@ -2,12 +2,13 @@
 
 import React, { useEffect, useState } from 'react';
 import { Calendar, CalendarPlus2, ChevronDown, Clock, CloudUpload, Eye, Globe, LockKeyhole, Map, MapPin, Upload, X } from 'lucide-react';
-import { FunctionalButton, UserInfoCard } from '@/components/reuseable';
-import useSWR from 'swr';
-import { DisableUsers, GetUserBooking } from '@/services/adminService';
+import { FunctionalButton, MultiSelect, UserInfoCard } from '@/components/reuseable';
+import useSWR, { mutate } from 'swr';
+import { DisableUsers, GetUserBooking, UpdateAdminUserDetail } from '@/services/adminService';
 import useToast from '@/hooks/useToast';
 import { BrowseAllBooking } from '@/services/eventService';
 import UserTicketHistory from './userTicketHistory';
+import { formatDateWithAMPM } from '@/utils/dateFormatter';
 
 interface EventsProps {
     close: any,
@@ -15,12 +16,56 @@ interface EventsProps {
 }
 
 const UserDetailModal = ({ close, user }: EventsProps) => {
+    const roles = ['attendee', 'creator', 'admin', 'superAdmin']
     const { data: allBookings = [] } = useSWR('all-bookings', BrowseAllBooking, {
         suspense: true,
         // refreshInterval: 60000
-      });
+    });
     const toast = useToast()
-    const booking = allBookings.filter(bk=> bk.userId === user._id)
+    const booking = allBookings.filter(bk => bk.userId === user._id)
+    const [adminData, setAdminData] = useState({
+        role: user.role[0],
+    })
+    const [loading, setLoading] = useState(false)
+    const [isDisable, setIsDisable] = useState(false)
+
+    const createAdmin = async () => {
+        try {
+            setLoading(true)
+            const response = await UpdateAdminUserDetail(adminData, user._id)
+            console.log(response)
+            if (response?.error) {
+                toast({
+                    status: 'error',
+                    text: response?.error,
+                    duration: 5000
+                });
+                setLoading(false)
+                // close()
+            }
+            if (response?.message === "success") {
+                mutate("all-users")
+                toast({
+                    status: 'success',
+                    text: 'User Role Updated',
+                    duration: 3000
+                });
+                setLoading(false)
+                close()
+            }
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const handleTags = (value: string) => {
+        console.log(value)
+        setAdminData(prev => ({
+            ...prev,
+            role: value
+        }));
+    }
     // console.log(booking)
     // const { data: booking = [], error } = useSWR('user-booking',()=>GetUserBooking(user._id),{suspense:true});
     //  const [bookings, setbookings] 
@@ -55,16 +100,29 @@ const UserDetailModal = ({ close, user }: EventsProps) => {
 
     const disableAccount = async () => {
         try {
+            setIsDisable(true)
             const response = await DisableUsers(user._id)
             console.log(response)
-            if (response.message === "account disabled") {
+            if (response?.message === "account disabled") {
                 // alert(response.message)
+                mutate("all-users")
                 toast({
                     status: 'success',
                     text: response.message,
                     duration: 3000
                 });
+                setIsDisable(false)
                 close()
+            }
+            if (response?.error) {
+                toast({
+                    status: 'error',
+                    text: response?.error,
+                    duration: 5000
+                });
+                setIsDisable(false)
+                setLoading(false)
+                // close()
             }
         } catch (error) {
             console.log(error)
@@ -81,7 +139,12 @@ const UserDetailModal = ({ close, user }: EventsProps) => {
         });
     }
 
-// TODO:fix registration details
+    const registerDate = formatDateWithAMPM(user.createdAt).split(", ")
+    const loginDate = formatDateWithAMPM(user.lastLogin).split(", ")
+
+    // console.log(registerDate,loginDate)
+
+    // TODO:fix registration details
     return (
         <div className="fixed bg-[#ffff7] z-[10000] backdrop-blur-[5px] bottom-0 left-0 right-0 top-0 h-full">
             <div className="max-w-[62rem]  h-full w-full mx-auto   bg-white rounded-lg shadow">
@@ -92,7 +155,7 @@ const UserDetailModal = ({ close, user }: EventsProps) => {
                     </button>
                 </div>
                 {/* Content */}
-                <div className='h-[86%] flex flex-col gap-6 overflow-auto p-[1.2rem] px-[1.6rem]'>
+                <div className='h-[85%] flex flex-col gap-6 overflow-auto p-[1.2rem] px-[1.6rem]'>
                     {/* Personal Information */}
                     <div className="">
                         <p className="xs-text-medium">PERSONAL INFORMATION</p>
@@ -104,12 +167,14 @@ const UserDetailModal = ({ close, user }: EventsProps) => {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                             <div>
                                 <label className="auth-label">User Role</label>
-                                <div className="relative">
-                                    <select className="auth-input-container !w-full auth-input">
-                                        <option>{user.role}</option>
-                                    </select>
-                                    <ChevronDown size={16} className="absolute right-3 top-3.5 text-gray-400" />
-                                </div>
+                                <MultiSelect
+                                    options={roles}
+                                    open={true}
+                                    multi={false}
+                                    addOptions={handleTags}
+                                    desc=''
+                                    singleValue={adminData.role}
+                                />
                             </div>
                             <div>
                                 <label className="auth-label">Contact number</label>
@@ -147,6 +212,7 @@ const UserDetailModal = ({ close, user }: EventsProps) => {
                             </div>
                             <div>
                                 <label className="auth-label">Account Status</label>
+
                                 <div className="relative">
                                     <select className="auth-input-container !w-full auth-input">
                                         <option>{user.status}</option>
@@ -165,44 +231,45 @@ const UserDetailModal = ({ close, user }: EventsProps) => {
                     <div className="">
                         <p className="xs-text-medium">REGISTRATION AND ACTIVITY DETAILS</p>
 
-                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
+                        {user.createdAt && <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
                             <div className='flex flex-col gap-2'>
                                 <label className="xs-text-medium !font-normal">Registration Date</label>
-                                <p className='xs-text !text-[#101828]' >{userData.registrationDate}</p>
+                                <p className='xs-text !text-[#101828]' >{`${registerDate[0]}, ${registerDate[1]}`}</p>
                             </div>
                             <div className='flex flex-col gap-2'>
                                 <label className="xs-text-medium !font-normal">Registration Time</label>
-                                <p className='xs-text !text-[#101828]' >{userData.registrationTime}</p>
+                                <p className='xs-text !text-[#101828]' >{registerDate[2]}</p>
                             </div>
-                        </div>
+                        </div>}
 
-                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        {user.lastLogin && <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                             <div className='flex flex-col gap-2'>
                                 <label className="xs-text-medium !font-normal">Last Login Date</label>
-                                <p className='xs-text !text-[#101828]' >{userData.lastLoginDate}</p>
+                                <p className='xs-text !text-[#101828]' >{`${loginDate[0]}, ${loginDate[1]}`}</p>
                             </div>
                             <div className='flex flex-col gap-2'>
                                 <label className="xs-text-medium !font-normal">Last Login Time</label>
-                                <p className='xs-text !text-[#101828]' >{userData.lastLoginTime}</p>
+                                <p className='xs-text !text-[#101828]' >{loginDate[1]}</p>
                             </div>
-                            <div className="flex flex-col gap-2">
+                            {/* <div className="flex flex-col gap-2">
                                 <label className="xs-text-medium !font-normal">Device & Browser Used</label>
                                 <p className='xs-text !text-[#101828]' >{userData.device}; {userData.browser}</p>
-                            </div>
-                        </div>
+                            </div> */}
+                        </div>}
                     </div>
 
                     {/* Divider */}
                     <hr className="" />
 
                     {/* Ticket History */}
-                   <UserTicketHistory ticketHistory={booking} />
+                    <UserTicketHistory ticketHistory={booking} />
 
                     {/* Divider */}
                     <hr className="my-6" />
 
+                    {/* TODO: IMplement sessions */}
                     {/* Login History */}
-                    <div>
+                    {/* <div>
                         <p className="xs-text-medium">LOGIN HISTORY AND ACTIVE SESSIONS</p>
 
                         <div className="space-y-4">
@@ -227,12 +294,14 @@ const UserDetailModal = ({ close, user }: EventsProps) => {
                                 </div>
                             ))}
                         </div>
-                    </div>
+                    </div> */}
                 </div>
 
                 <div className="flex justify-end space-x-4 p-4 border-t ">
-                    <FunctionalButton click={initiator} noIcn text='Disable account' txtClr='text-[#344054]' bgClr='#ffff' clx='border border-[#D0D5DD]' />
+                    <FunctionalButton disable={isDisable} click={initiator} noIcn text={isDisable ? 'In progress...' : 'Disable account'} txtClr='text-[#344054]' bgClr='#ffff' clx='border border-[#D0D5DD]' />
                     {/* <FunctionalButton noIcn text="Save changes" bgClr='#221FCB' clx='border border-[#98A2B3]' /> */}
+                    <FunctionalButton disable={loading} click={createAdmin} noIcn text={loading ? "Saving..." : "Save changes"} />
+
                 </div>
             </div>
         </div >

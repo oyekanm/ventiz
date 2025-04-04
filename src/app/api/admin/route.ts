@@ -50,7 +50,7 @@ export async function GET(req: NextRequest) {
       });
       const data = await res.json();
 
-      console.log(data);
+      // console.log(data);
 
       if (res.status !== 200) {
         return NextResponse.json(
@@ -70,6 +70,7 @@ export async function GET(req: NextRequest) {
   }
 
   if (ids && types) {
+    console.log(ids , types)
     const validTypes = ["user-bookings", "disable-account", "remove-session"];
     if (!validTypes.includes(types!)) {
       return NextResponse.json(
@@ -87,6 +88,8 @@ export async function GET(req: NextRequest) {
         },
       });
       const data = await res.json();
+
+      console.log(data)
 
       if (res.status !== 200) {
         return NextResponse.json(
@@ -115,7 +118,7 @@ export async function GET(req: NextRequest) {
     //     { status: 400 }
     //   );
     // }
-  console.log(auth)
+  // console.log(auth)
 
 
     // const res = await fetch(`https://9sxeaygjo0.execute-api.eu-north-1.amazonaws.com/all-events`, {
@@ -150,9 +153,9 @@ export async function POST(req: NextRequest) {
   }
   const token = auth.token;
   const body = await req.json();
-  console.log(body);
+  // console.log(body);
   // const token = req.headers.get("Authorization")
-  console.log(token);
+  // console.log(token);
   try {
     // Fetch data from your backend API
 
@@ -194,9 +197,11 @@ export async function PATCH(req: NextRequest) {
   const ids = urls.searchParams.get("ids");
   const type = urls.searchParams.get("type");
 
+  // console.log(`${url}/${type}/${ids}`,body)
+
   // console.log(token, body, end);
   if (ids && type) {
-    const validTypes = ["update-user", "update-user-notification"];
+    const validTypes = ["update-admin", "update-user-notification", "admin-security"];
     if (!validTypes.includes(type!)) {
       return NextResponse.json(
         { error: "Invalid type parameter" },
@@ -213,7 +218,10 @@ export async function PATCH(req: NextRequest) {
         },
         body: JSON.stringify(body),
       });
+
       const data = await res.json();
+      // console.log(data)
+
 
       if (res.status !== 200) {
         return NextResponse.json(

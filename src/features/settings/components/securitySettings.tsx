@@ -1,18 +1,90 @@
 "use client"
 
 import { FunctionalButton } from "@/components/reuseable";
+import { Switch } from "@/components/ui/switch";
+import { useAppContext } from "@/context/appContext";
+import useToast from "@/hooks/useToast";
+import { UpdateAdminUserSecurity } from "@/services/adminService";
 import { Eye } from "lucide-react";
 import { useState } from "react";
 
 interface Props {
-    activeTab: string;
-    setActiveTab:any
+  activeTab: string;
+  setActiveTab: any
 }
 
-export default function SecuritySettings({activeTab,setActiveTab}:Props) {
+// /admin-security/{userId} PATCH {password: {oldPassword, newPassword}, mfa: boolean, recoveryMail: string, securityQuestions: {question: string, answer: string}[] }
+
+export default function SecuritySettings({ activeTab, setActiveTab }: Props) {
   const tabs = ["My account", "Notification", "Billings", "Security", "Event & ticketing", "Integrations"]
 
-  const [twoFactorAuth, setTwoFactorAuth] = useState(true);
+  const {user} = useAppContext()
+  const toast = useToast()
+  const [loading, setLoading] = useState(false)
+  const [securityInfo, setSecurityInfo] = useState(
+    {
+      password: {
+        oldPassword: "",
+        newPassword: ""
+      },
+      mfa: false,
+      recoveryMail: "",
+      securityQuestions: [{
+        question: "",
+        answer: ""
+      }]
+    }
+  )
+
+  const UpdateSecurity = async () => {
+
+    try {
+      setLoading(true)
+      const response = await UpdateAdminUserSecurity(securityInfo, user._id)
+      console.log(response)
+      if (response?.error) {
+        toast({
+          status: 'error',
+          text: response?.error,
+          duration: 5000
+        });
+        setLoading(false)
+        // close()
+      }
+      if (response?.message === "success") {
+        toast({
+          status: 'success',
+          text: 'User Role Updated',
+          duration: 3000
+        });
+        setLoading(false)
+        close()
+      }
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  console.log(securityInfo)
+
+  const handleSQ = (index: number, field: string, value: any) => {
+    const updatedSqa = [...securityInfo.securityQuestions];
+    const update = {
+      ...updatedSqa[index],
+      [field]: value,
+    }
+
+    updatedSqa[index] = update;
+    // console.log(value, field)
+
+    setSecurityInfo(prev => {
+      return {
+        ...prev,
+        securityQuestions: updatedSqa,
+      }
+    });
+  }
   return (
     <div className="flex flex-col gap-8">
       <div className="flex justify-between items-center">
@@ -22,7 +94,9 @@ export default function SecuritySettings({activeTab,setActiveTab}:Props) {
         </div>
         <div className="flex items-center gap-4">
           <FunctionalButton noIcn text='Discard' txtClr='text-[#344054]' bgClr='#ffff' clx='border border-[#D0D5DD]' />
-          <FunctionalButton noIcn text='Save changes' />
+          {/* <FunctionalButton noIcn text='Save changes' /> */}
+          <FunctionalButton disable={loading} click={UpdateSecurity} noIcn text={loading ? "Saving..." : "Save changes"} />
+
         </div>
       </div>
       <div className='flex flex-col gap-8'>
@@ -41,135 +115,122 @@ export default function SecuritySettings({activeTab,setActiveTab}:Props) {
           </div>
         </div>
         <div className="space-y-8">
-          <div className="rounded-md border border-gray-200 p-6">
-            <h3 className="text-lg font-medium mb-6">Security & Privacy Settings</h3>
-
-            <div className="space-y-10">
-              <div>
-                <h4 className="text-md font-medium mb-6">Change Password</h4>
-
-                <div className="space-y-6">
+          <p className="settings-text-bold">Security & Privacy Settings</p>
+          <div className="bg-white radius-md p-5 px-6 border flex flex-col gap-4 ">
+            <div className='grid grid-cols-3 gap-4'>
+              <p className="settings-text-medium">Change Password</p>
+              <div className="col-span-2 flex flex-col gap-8">
+                <div className="grid grid-cols-2 items-start">
                   <div>
-                    <label className="block text-sm text-gray-600 mb-2">Current Password</label>
-                    <div className="relative">
-                      <input
-                        type="password"
-                        className="w-full p-2 border border-gray-300 rounded-md pr-10"
-                        value="••••••••••"
-                        readOnly
-                      />
-                      <button className="absolute inset-y-0 right-0 flex items-center pr-3">
-                        <Eye className="h-5 w-5 text-gray-400" />
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="flex space-x-4">
-                    <div className="flex-1">
-                      <label className="block text-sm text-gray-600 mb-2">New Password</label>
-                      <input
-                        type="password"
-                        className="w-full p-2 border border-gray-300 rounded-md"
-                        placeholder="Enter password here"
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <label className="block text-sm text-gray-600 mb-2">Confirm Password</label>
-                      <input
-                        type="password"
-                        className="w-full p-2 border border-gray-300 rounded-md"
-                        placeholder="Re-enter password here"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <h4 className="text-md font-medium mb-6">Account Recovery Options</h4>
-
-                <div className="space-y-6">
-                  <div>
-                    <label className="block text-sm text-gray-600 mb-2">Recovery Email</label>
+                    <label className="auth-label">
+                      Current Password
+                    </label>
                     <input
-                      type="email"
-                      className="w-full p-2 border border-gray-300 rounded-md"
-                      defaultValue="elijah.ayodele@3ventiz.co.uk"
+                      type="text"
+                      name="oldpassword"
+                      className="auth-input-container !w-full auth-input"
+                      placeholder="Enter your current password"
+                      value={securityInfo.password.oldPassword}
+                      onChange={(e) => setSecurityInfo(prev => ({ ...prev, password: { ...prev.password, oldPassword: e.target.value } }))}
                     />
                   </div>
-
-                  <div className="flex space-x-4">
-                    <div className="flex-1">
-                      <label className="block text-sm text-gray-600 mb-2">Security Question</label>
-                      <input
-                        type="text"
-                        className="w-full p-2 border border-gray-300 rounded-md"
-                        defaultValue="What is the name of my first pet?"
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <label className="block text-sm text-gray-600 mb-2">Security Answer</label>
-                      <input
-                        type="text"
-                        className="w-full p-2 border border-gray-300 rounded-md"
-                        defaultValue="Montoya"
-                      />
-                    </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="auth-label">
+                      New Password
+                    </label>
+                    <input
+                      type="password"
+                      name="newpassword"
+                      className="auth-input-container !w-full auth-input"
+                      placeholder="Enter your password here"
+                      value={securityInfo.password.newPassword}
+                      onChange={(e) => setSecurityInfo(prev => ({ ...prev, password: { ...prev.password, newPassword: e.target.value } }))}
+                    />
+                  </div>
+                  <div>
+                    <label className="auth-label">
+                      Confirm Password
+                    </label>
+                    <input
+                      type="password"
+                      name="country"
+                      className="auth-input-container !w-full auth-input"
+                      placeholder="Re-enter password here"
+                    // value={info.fullName}
+                    // onChange={handleInputChange}
+                    />
                   </div>
                 </div>
               </div>
-
-              <div className="flex justify-between items-center">
-                <h4 className="text-md font-medium">Two-Factor Authentication</h4>
-                <div
-                  className={`w-12 h-6 rounded-full p-1 cursor-pointer transition-colors duration-200 ease-in-out ${twoFactorAuth ? 'bg-green-500' : 'bg-gray-300'}`}
-                  onClick={() => setTwoFactorAuth(!twoFactorAuth)}
-                >
-                  <div
-                    className={`bg-white w-4 h-4 rounded-full shadow-md transform duration-200 ease-in-out ${twoFactorAuth ? 'translate-x-6' : 'translate-x-0'}`}
-                  />
+            </div>
+            <div className='grid grid-cols-3 gap-4'>
+              <p className="settings-text-medium">Account Recovery Options</p>
+              <div className="col-span-2 flex flex-col gap-8">
+                <div className="grid grid-cols-2 items-start">
+                  <div>
+                    <label className="auth-label">
+                      Recovery Email
+                    </label>
+                    <input
+                      type="text"
+                      name="recoverymail"
+                      className="auth-input-container !w-full auth-input"
+                      placeholder="Enter an email here"
+                      value={securityInfo.recoveryMail}
+                      onChange={(e) => setSecurityInfo(prev => ({ ...prev, recoveryMail: e.target.value }))}
+                    />
+                  </div>
                 </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-md border border-gray-200 p-6">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-medium">Login History & Active Sessions</h3>
-              <button className="text-blue-600 text-sm">Log out from all sessions</button>
-            </div>
-
-            <div className="space-y-4">
-              {[
-                { device: 'MacBook Pro M3', active: true, date: 'Active Now' },
-                { device: 'ZenBook Ultra X5', active: false, date: 'Jan 08, 2025; 08:45AM' },
-                { device: 'ThinkPad X1 Carbon', active: false, date: 'Jan 08, 2025; 08:45AM', signedOut: true },
-                { device: 'Spectre x360', active: false, date: 'Jan 08, 2025; 08:45AM' },
-                { device: 'Surface Laptop Studio', active: false, date: 'Jan 08, 2025; 08:45AM', signedOut: true }
-              ].map((session, index) => (
-                <div key={index} className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <div className="bg-gray-200 h-12 w-12 flex items-center justify-center rounded">
-                      <svg className="h-6 w-6 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
-                        <line x1="8" y1="21" x2="16" y2="21" />
-                        <line x1="12" y1="17" x2="12" y2="21" />
-                      </svg>
+                {securityInfo?.securityQuestions?.map((sqa, index) => (
+                  <div key={index} className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="auth-label">
+                        Security Question
+                      </label>
+                      <input
+                        type="text"
+                        name="address"
+                        className="auth-input-container !w-full auth-input"
+                        placeholder="Enter your Address"
+                        value={sqa.question}
+                        onChange={(e) => handleSQ(index, "question", e.target.value)}
+                      />
                     </div>
-                    <div className="ml-4">
-                      <p className="text-sm font-medium">{session.device}</p>
-                      <p className="text-xs text-gray-500">Last seen: {session.date}</p>
+                    <div>
+                      <label className="auth-label">
+                        Security Answer
+                      </label>
+                      <input
+                        type="text"
+                        name="securityanswer"
+                        className="auth-input-container !w-full auth-input"
+                        placeholder="Enter your answer"
+                        value={sqa.answer}
+                        onChange={(e) => handleSQ(index, "answer", e.target.value)}
+
+                      />
                     </div>
                   </div>
-                  {session.signedOut ? (
-                    <span className="text-sm text-red-600">Signed out</span>
-                  ) : (
-                    <button className="text-sm text-blue-600">Log out</button>
-                  )}
-                </div>
-              ))}
+                ))}
+
+              </div>
             </div>
+            <div className='grid grid-cols-3 gap-4'>
+              <div className='flex items-center justify-between '>
+                <label htmlFor='tfa' className="auth-label">Two-Factor Authentication</label>
+                <Switch
+                  id='tfa'
+                  checked={securityInfo.mfa}
+                  onCheckedChange={() => setSecurityInfo(prev => ({ ...prev, mfa: !prev.mfa }))}
+                // onChange={(e) => handleTicketChange(index, "quantity", parseInt(e.target.value))}
+                />
+              </div>
+            </div>
+
           </div>
+
         </div>
       </div>
     </div>

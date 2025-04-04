@@ -5,6 +5,9 @@ import { ChevronDown, Download, Edit, Eye, Plus, RotateCcw, Trash2 } from "lucid
 import { useState } from "react";
 import PayoutCreateForm from "./payoutCreateForm";
 import { FunctionalButton } from "@/components/reuseable";
+import useSWR from "swr";
+import { GetUserCard } from "@/services/supportService";
+import useToast from "@/hooks/useToast";
 
 interface Props {
     activeTab: string;
@@ -14,6 +17,12 @@ interface Props {
 // Billings Tab Component
 export default function BillingsTab({activeTab,setActiveTab}:Props) {
     const { user } = useAppContext()
+    const toast = useToast()
+
+    const { data: cards, mutate } = useSWR("user-card",()=> GetUserCard(user._id), {
+        fallbackData: [],
+        refreshInterval: 10000
+      });
     const [open, setOpen] = useState(false)
 
     const tabs = ["My account", "Notification", "Billings", "Security", "Event & ticketing", "Integrations"]
@@ -23,6 +32,38 @@ export default function BillingsTab({activeTab,setActiveTab}:Props) {
         address: user.role,
         country: user.email
     })
+
+    // const createAdmin = async () => {
+    //     // console.log(adminData)
+    //     try {
+    //         setLoading(true)
+    //         const response = await CreateAdmin(adminData)
+    //         console.log(response)
+    //          if (response?.error) {
+    //             toast({
+    //                 status: 'warning',
+    //                 text: response?.error,
+    //                 duration: 5000
+    //             });
+    //             setLoading(false)
+    //             // close()
+    //         }
+    //         if (response?.message === "success") {
+    //             mutate("all-users")
+    //             toast({
+    //                 status: 'success',
+    //                 text: 'New roles assigned',
+    //                 duration: 3000
+    //             });
+    //             setLoading(false)
+    //             close()
+    //         }
+    //     } catch (error) {
+    //         console.log(error)
+    //     }
+    // }
+
+    console.log(cards)
     const handleInputChange = (e: any) => {
         const { name, value } = e.target;
         console.log(value)
@@ -31,18 +72,7 @@ export default function BillingsTab({activeTab,setActiveTab}:Props) {
             [name]: value
         }));
     };
-    const getCardLogo = (type: string) => {
-        switch (type) {
-            case 'pending':
-                return 'bg-gray-100 text-gray-700';
-            case 'disabled':
-                return 'bg-red-50 text-red-700';
-            case 'approved':
-                return 'bg-green-50 text-green-700';
-            default:
-                return 'bg-gray-100 text-gray-700';
-        }
-    }
+    
     const openModal = () => {
         setOpen(!open)
         if (document.body.style.overflow !== "hidden") {
@@ -59,8 +89,8 @@ export default function BillingsTab({activeTab,setActiveTab}:Props) {
                     <p className="sm-text">Manage your account, preferences, and platform configurations</p>
                 </div>
                 <div className="flex items-center gap-4">
-                    <FunctionalButton noIcn text='Discard' txtClr='text-[#344054]' bgClr='#ffff' clx='border border-[#D0D5DD]' />
-                    <FunctionalButton noIcn text='Save changes' />
+                    {/* <FunctionalButton noIcn text='Discard' txtClr='text-[#344054]' bgClr='#ffff' clx='border border-[#D0D5DD]' />
+                    <FunctionalButton noIcn text='Save changes' /> */}
                 </div>
             </div>
             <div className='flex flex-col gap-8'>
@@ -80,7 +110,7 @@ export default function BillingsTab({activeTab,setActiveTab}:Props) {
                 </div>
                 <div className="flex flex-col gap-4 ">
                     {/* Billing Information */}
-                    <p className="settings-text-bold">Billings & Subscription Management</p>
+                    {/* <p className="settings-text-bold">Billings & Subscription Management</p>
                     <div className="bg-white radius-md p-5 px-6 border flex flex-col gap-4 ">
                         <div className='grid grid-cols-3 gap-4'>
                             <p className="settings-text-medium">Billing information</p>
@@ -131,7 +161,7 @@ export default function BillingsTab({activeTab,setActiveTab}:Props) {
                             </div>
                         </div>
 
-                    </div>
+                    </div> */}
 
                     {/* Payment Methods */}
                     {/* <div className="bg-white radius-md p-5 px-6 border flex flex-col gap-4 ">

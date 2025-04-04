@@ -1,6 +1,6 @@
 "use client"
 
-import { FunctionalButton, Loader, Pagination } from '@/components/reuseable';
+import { DateRangeFilter, FunctionalButton, Loader, Pagination } from '@/components/reuseable';
 import MultiSelect from '@/components/reuseable/multiSelect';
 import { useAppContext } from '@/context/appContext';
 import { EventCard, EventCreateForm, EventListing } from '@/features/events/components';
@@ -14,11 +14,11 @@ interface eventsProps {
 }
 
 const EventPageContainer = () => {
-    const {initialData} = useAppContext()
-    const options = ["all","physical", "virtual"];
+    const { initialData } = useAppContext()
+    const options = ["all", "physical", "virtual"];
 
-    const { data: events = [],isLoading } = useSWR('all-events', BrowseAllEvents, {
-        fallbackData:initialData.events || [],
+    const { data: events = [], isLoading } = useSWR('all-events', BrowseAllEvents, {
+        fallbackData: initialData.events || [],
         refreshInterval: 5000,
         // Enable refetching on window focus
         // revalidateOnFocus: true,
@@ -30,29 +30,41 @@ const EventPageContainer = () => {
 
     // const [events, setEvents] = useState<EventData[]>(initialData.events);
     const [eventLoading, setEventLoading] = useState(false)
-    console.log(events,initialData.events)
+    console.log(events, initialData.events)
     const [activeTab, setActiveTab] = useState("view")
     const [searchTerm, setSearchTerm] = useState("");
     // const [categoryFilter, setCategoryFilter] = useState<string[]>([]);
     const [categoryFilter, setCategoryFilter] = useState<string>("all");
     const [openSelect, setOpenSelect] = useState(false)
     const [currentPage, setCurrentPage] = useState(1);
-
-    // useEffect(() => {
-    //     const fetchEvents = async () => {
-    //         try {
-    //             setEventLoading(true)
-    //             const data = await BrowseAllEvents();
-    //             setEvents(data);
-    //             setEventLoading(false)
-    //         } catch (error) {
-    //             console.error("Error fetching events:", error);
-    //             setEventLoading(false)
-    //         }
-    //     };
+    const [dateRange, setDateRange] = useState<any>(
+        {
+          startDate: null,
+          endDate: null,
+        }
+      )
     
-    //     fetchEvents();
-    // }, []);
+      //   // Apply date range filter to users data
+      const handleDateRangeChange = (datesRange: any) => {
+        const { startDate, endDate } = datesRange;
+    
+        // Make end date inclusive by setting it to the end of the day
+        const inclusiveEndDate = new Date(endDate);
+        inclusiveEndDate.setHours(23, 59, 59, 999);
+    
+        setDateRange({
+          endDate: inclusiveEndDate as any,
+          startDate: startDate
+        })
+      };
+      const dateReset = () => {
+        setDateRange(
+          {
+            startDate: null,
+            endDate: null,
+          }
+        )
+      }
 
     const filteredItems = useMemo(() => {
         // console.log(categoryFilter)
@@ -67,14 +79,23 @@ const EventPageContainer = () => {
             // return item.eventType.toLowerCase().includes(categoryFilter.toLowerCase())
             return item.name.toLowerCase().includes(searchTerm.toLowerCase())
             // return newFilter || matchesSearch;
-        }).filter(item=> {
-            if(categoryFilter.toLowerCase() === "all"){
+        }).filter(item => {
+            if (categoryFilter.toLowerCase() === "all") {
                 return item
             }
             return item.eventType.toLowerCase().includes(categoryFilter.toLowerCase())
         })
-    // }, [searchTerm, categoryFilter])
-    }, [events, searchTerm, categoryFilter])
+        .filter((item) => {
+            const registrationDate = new Date(item.tickets[0].createdAt);
+            const filter = registrationDate >= dateRange.startDate && registrationDate <= dateRange.endDate;
+    
+            if (!dateRange.startDate || !dateRange.endDate) {
+              return item
+            }
+    
+            return filter;
+          });
+    }, [ searchTerm, categoryFilter,events,JSON.stringify(dateRange)])
 
     const itemsPerPage = 10
     const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
@@ -141,7 +162,10 @@ const EventPageContainer = () => {
                             <Table className="!size-6 text-[#98A2B3]" />
                         </span>
                     </FunctionalButton>
-                    <FunctionalButton Icon={Calendar} text='Jan 12, 2024 - Jan 18, 2024' txtClr='text-[#344054]' bgClr='#ffff' clx='border border-[#D0D5DD]' />
+                    <div className='flex items-center gap-4'>
+                        <DateRangeFilter onDateRangeChange={handleDateRangeChange} />
+                        {dateRange.startDate && <button onClick={dateReset} className="text-blue-600 font-medium text-[1.3rem] hover:underline">reset</button>}
+                    </div>
                     <FunctionalButton click={toggleSelect} Icon={ListFilter} text='Filters' txtClr='text-[#344054]' bgClr='#ffff' clx='border border-[#D0D5DD]' />
                 </div>
             </div>

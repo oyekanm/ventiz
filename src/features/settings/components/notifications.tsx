@@ -1,6 +1,6 @@
 "use client"
 
-import { FunctionalButton } from "@/components/reuseable";
+import { FunctionalButton, MultiSelect } from "@/components/reuseable";
 import { Switch } from "@/components/ui/switch";
 import { useAppContext } from "@/context/appContext";
 import useToast from "@/hooks/useToast";
@@ -31,35 +31,39 @@ import { mutate } from "swr";
 // }
 interface Props {
   activeTab: string;
-  setActiveTab:any
+  setActiveTab: any
 }
 
-export default function NotificationTab({activeTab,setActiveTab}:Props) {
+export default function NotificationTab({ activeTab, setActiveTab }: Props) {
   const tabs = ["My account", "Notification", "Billings", "Security", "Event & ticketing", "Integrations"]
+  const frequencies = ['daily', 'weekly']
 
   const toast = useToast()
   const { user } = useAppContext()
+  const [loading, setLoading] = useState(false)
   const [userNoti, setUserNoti] = useState({
     general: {
-      email: user.adminNotificationPreferences.general.types.email,
-      sms: user.adminNotificationPreferences.general.types.sms,
-      push: user.adminNotificationPreferences.general.types.push,
-      enableNotifications: user.adminNotificationPreferences.general.enableNotifications
+      email: user?.adminNotificationPreferences?.general.types.email,
+      sms: user?.adminNotificationPreferences?.general.types.sms,
+      push: user?.adminNotificationPreferences?.general.types.push,
+      enableNotifications: user?.adminNotificationPreferences?.general.enableNotifications
     },
     ticketAndEvent: {
-      ticketPurchase: user.adminNotificationPreferences.ticketAndEvent.ticketPurchase,
-      eventCreation: user.adminNotificationPreferences.ticketAndEvent.eventCreation,
-      eventReminder: user.adminNotificationPreferences.ticketAndEvent.eventReminder,
-      refundDispute: user.adminNotificationPreferences.ticketAndEvent.refundDispute
+      ticketPurchase: user?.adminNotificationPreferences?.ticketAndEvent.ticketPurchase,
+      eventCreation: user?.adminNotificationPreferences?.ticketAndEvent.eventCreation,
+      eventReminder: user?.adminNotificationPreferences?.ticketAndEvent.eventReminder,
+      refundDispute: user?.adminNotificationPreferences?.ticketAndEvent.refundDispute
     },
     adminAndVendor: {
-      newEventCreation: user.adminNotificationPreferences.adminAndVendor.newEventCreation,
-      ticketSalesUpdate: user.adminNotificationPreferences.adminAndVendor.ticketSalesUpdate,
-      lowTicketWarning: user.adminNotificationPreferences.adminAndVendor.lowTicketWarning,
-      refundRequestAlert: user.adminNotificationPreferences.adminAndVendor.refundRequestAlert,
-      newVendorApplicationApproval: user.adminNotificationPreferences.adminAndVendor.newVendorApplicationApproval,
-      paymentProcessing: user.adminNotificationPreferences.adminAndVendor.paymentProcessing
-    }
+      newEventCreation: user?.adminNotificationPreferences?.adminAndVendor.newEventCreation,
+      ticketSalesUpdate: user?.adminNotificationPreferences?.adminAndVendor.ticketSalesUpdate,
+      lowTicketWarning: user?.adminNotificationPreferences?.adminAndVendor.lowTicketWarning,
+      refundRequestAlert: user?.adminNotificationPreferences?.adminAndVendor.refundRequestAlert,
+      newVendorApplicationApproval: user?.adminNotificationPreferences?.adminAndVendor.newVendorApplicationApproval,
+      paymentProcessing: user?.adminNotificationPreferences?.adminAndVendor.paymentProcessing
+    },
+    frequency: user?.adminNotificationPreferences?.frequency
+
   })
   const handleTicketChange = (field: string, name: string, value: any) => {
     if (field === "general") {
@@ -103,23 +107,40 @@ export default function NotificationTab({activeTab,setActiveTab}:Props) {
 
   const updateNotification = async () => {
     try {
+      setLoading(true)
       const response = await UpdateUserNotification(userNoti, user._id)
       console.log(response)
       if (response.message === "success") {
         mutate("single-user")
         toast({
           status: 'success',
-          text: 'User Info Updated',
+          text: 'User Notification settings Updated',
           duration: 3000
         });
+        setLoading(false)
         close()
+      }
+      if (response?.error) {
+        toast({
+          status: 'error',
+          text: response?.error,
+          duration: 5000
+        });
+        setLoading(false)
+        // close()
       }
     } catch (error) {
       console.log(error)
     }
   }
 
-  console.log(userNoti)
+  const handleTags = (value: string) => {
+    console.log(value)
+    setUserNoti((prev: any) => ({
+      ...prev,
+      frequency: [value]
+    }));
+  }
   return (
     <div className="flex flex-col gap-8">
       <div className="flex justify-between items-center">
@@ -129,7 +150,9 @@ export default function NotificationTab({activeTab,setActiveTab}:Props) {
         </div>
         <div className="flex items-center gap-4">
           <FunctionalButton noIcn text='Discard' txtClr='text-[#344054]' bgClr='#ffff' clx='border border-[#D0D5DD]' />
-          <FunctionalButton click={updateNotification} noIcn text='Save changes' />
+          {/* <FunctionalButton click={updateNotification} noIcn text='Save changes' /> */}
+          <FunctionalButton disable={loading} click={updateNotification} noIcn text={loading ? "Saving..." : "Save changes"} />
+
         </div>
       </div>
       <div className='flex flex-col gap-8'>
@@ -288,19 +311,23 @@ export default function NotificationTab({activeTab,setActiveTab}:Props) {
             </div>
 
             {/* Advanced Settings */}
-            {/* <div className="border border-gray-200 rounded-md p-4">
-          <h4 className="font-medium mb-4">Advanced settings and customization</h4>
+            <div className="border border-gray-200 radius-md p-5 px-6 flex flex-col gap-8">
+              <p className="settings-text-medium">Advanced settings and customization</p>
 
-          <div>
-            <label className="block text-sm text-gray-500 mb-1">Notification frequency</label>
-            <div className="relative">
-              <select className="w-full p-2 border border-gray-200 rounded pr-8 bg-white">
-                <option>Daily</option>
-              </select>
-              <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500" />
+              <div className="w-full max-w-[32rem]">
+                <label className="auth-label">
+                  Notification frequency
+                </label>
+                <MultiSelect
+                  options={frequencies}
+                  open={true}
+                  addOptions={handleTags}
+                  desc=''
+                  multi={false}
+                  singleValue={userNoti?.frequency[0]}
+                />
+              </div>
             </div>
-          </div>
-        </div> */}
           </div>
         </div>
       </div>

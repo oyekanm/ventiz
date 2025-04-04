@@ -11,24 +11,36 @@ import { mutate } from 'swr'
 export default function AdminCreateForm({ close }: ModalProps) {
     const toast = useToast()
     const roles = ['attendee', 'creator', 'admin', 'superAdmin', 'eventManager', 'ticketManager', 'systemAdmin']
-    const [adminData, setAdminData] = useState<Partial<User>>({
+    const [adminData, setAdminData] = useState({
         email: "",
         phone: "",
         role:  [],
         fullName: ""
     })
+    const [loading, setLoading] = useState(false)
     const createAdmin = async () => {
-        console.log(adminData)
+        // console.log(adminData)
         try {
+            setLoading(true)
             const response = await CreateAdmin(adminData)
             console.log(response)
-            if (response.message === "success") {
+             if (response?.error) {
+                toast({
+                    status: 'warning',
+                    text: response?.error,
+                    duration: 5000
+                });
+                setLoading(false)
+                // close()
+            }
+            if (response?.message === "success") {
                 mutate("all-users")
                 toast({
                     status: 'success',
                     text: 'New roles assigned',
                     duration: 3000
                 });
+                setLoading(false)
                 close()
             }
         } catch (error) {
@@ -43,11 +55,11 @@ export default function AdminCreateForm({ close }: ModalProps) {
             [name]: value
         }));
     };
-    const handleTags = (value: string[]) => {
+    const handleTags = (value: string) => {
         console.log(value)
-        setAdminData(prev => ({
+        setAdminData((prev:any) => ({
             ...prev,
-            role:value
+            role:[value]
         }));
     }
 // const ar = [ 'attendee', "hshs","jshsh" ] 
@@ -117,7 +129,8 @@ export default function AdminCreateForm({ close }: ModalProps) {
                                 open={true}
                                 addOptions={handleTags}
                                 desc=''
-                                multiValue={adminData.role}
+                                multi={false}
+                                singleValue={adminData?.role[0]}
                                 />
                         </div>
                         <div>
@@ -178,7 +191,7 @@ export default function AdminCreateForm({ close }: ModalProps) {
 
                 <div className="flex justify-end space-x-4 mt-4 p-4 border-t">
                     <FunctionalButton click={close} noIcn text='Cancel' txtClr='text-[#344054]' bgClr='#ffff' clx='border border-[#D0D5DD]' />
-                    <FunctionalButton click={createAdmin} noIcn text={"Add member"} />
+                    <FunctionalButton disable={loading} click={createAdmin} noIcn text={loading?"Adding member...":"Add member"} />
                 </div>
             </div>
         </div >

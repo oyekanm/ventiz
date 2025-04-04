@@ -9,6 +9,7 @@ import { useState } from 'react';
 import UploadEventBanner from './uploadEventBanner';
 import useToast from '@/hooks/useToast';
 import { mutate } from 'swr';
+import { validateBasicInfo } from '@/utils/validateForm';
 
 
 
@@ -26,7 +27,7 @@ const EventCreateForm = ({ close }: ModalProps) => {
     const eventType = ["physical", "virtual"]
     const eventTags = ["Farming", "Innovation", "Agriculture", "Tech", "business", "theatre arts"]
     // "creatorId": `${user._id}`,
-    const [eventData, setEventData] = useState<Partial<EventData>>({
+    const [eventData, setEventData] = useState({
         "creatorId": `${user._id}`,
         "creatorBusinessName": "3ventizadmin",
         "name": "",
@@ -316,6 +317,11 @@ const EventCreateForm = ({ close }: ModalProps) => {
 
     };
 
+    const changeActiveTab = (text:string)=>{
+        setActiveTab(text)
+        console.log(validateBasicInfo(eventData))
+    }
+
     const inputCon = "grid gap-2"
 
     return (
@@ -338,19 +344,19 @@ const EventCreateForm = ({ close }: ModalProps) => {
                             <div className="flex border-b">
                                 <button
                                     className={`sm-text px-4 py-2 ${activeTab === 'basic' ? '!text-[#221FCB] border-b-2 border-[#221FCB]' : ' !text-[#667085]'}`}
-                                    onClick={() => setActiveTab('basic')}
+                                    onClick={() => changeActiveTab('basic')}
                                 >
                                     Basic information
                                 </button>
                                 <button
                                     className={`sm-text px-4 py-2 ${activeTab === 'ticket' ? '!text-[#221FCB] border-b-2 border-[#221FCB]' : ' !text-[#667085]'}`}
-                                    onClick={() => setActiveTab('ticket')}
+                                    onClick={() => changeActiveTab('ticket')}
                                 >
                                     Ticket details
                                 </button>
                                 <button
                                     className={`sm-text px-4 py-2 ${activeTab === 'publish' ? '!text-[#221FCB] border-b-2 border-[#221FCB]' : ' !text-[#667085]'}`}
-                                    onClick={() => setActiveTab('publish')}
+                                    onClick={() => changeActiveTab('publish')}
                                 >
                                     Publish settings
                                 </button>

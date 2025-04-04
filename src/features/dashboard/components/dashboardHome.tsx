@@ -1,6 +1,6 @@
 "use client"
 
-import { FunctionalButton, MetricsCard, SectionBlock } from '@/components/reuseable';
+import { FunctionalButton, MetricsCard, SectionBlock, TimeFilter } from '@/components/reuseable';
 import { useAppContext } from '@/context/appContext';
 import { EventCard, EventCreateForm } from '@/features/events/components';
 import { NotificationCardContainer } from '@/features/notifications/components';
@@ -38,32 +38,6 @@ export default function DashboardHome() {
   const route = useRouter()
   const [open, setOpen] = useState(false)
 
-  const toast = useToast();
-  const callToast = () => {
-    toast({
-      status: 'success',
-      text: 'Facility deleted',
-      duration: 60000
-    });
-    toast({
-      status: 'error',
-      text: 'Facility deleted',
-      duration: 60000
-    });
-    toast({
-      status: 'warning',
-      text: 'Facility deleted',
-      duration: 60000
-    });
-    toast({
-      status: 'normal',
-      text: 'Facility deleted',
-      duration: 60000,
-      clickText:"Yes, delete"
-    });
-  }
-
-
   const openModal = () => {
     setOpen(!open)
     if (document.body.style.overflow !== "hidden") {
@@ -90,11 +64,7 @@ export default function DashboardHome() {
         <p className="sm-text">Get a quick snapshot of key metrics</p>
         <div className="flex items-center justify-between mt-8">
           {/* Time filters */}
-          <div className="flex space-x-2">
-            {timeFilters.map((filter, index) => (
-              <FunctionalButton key={index} noIcn text={filter} txtClr='text-[#344054]' bgClr='#ffff' clx='border border-[#D0D5DD]' />
-            ))}
-          </div>
+         <TimeFilter />
           <div className="flex items-center gap-4">
             {/* <FunctionalButton click={callToast} noIcn text='Manage events' txtClr='text-[#344054]' bgClr='#ffff' clx='border border-[#D0D5DD]' /> */}
             <FunctionalButton click={() => route.push("/events")} noIcn text='Manage events' txtClr='text-[#344054]' bgClr='#ffff' clx='border border-[#D0D5DD]' />

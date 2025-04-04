@@ -20,9 +20,11 @@ export default function MyAccount({activeTab,setActiveTab}:Props) {
   const toast = useToast()
   const [info, setInfo] = useState({
     fullName: user?.fullName,
-    role: user?.role,
+    // role: user?.role,
     email: user?.email
   })
+  const [loading,setLoading] = useState(false)
+
   const [twoFactorEnabled, setTwoFactorEnabled] = useState(true);
 
   const handleInputChange = (e: any) => {
@@ -35,17 +37,28 @@ export default function MyAccount({activeTab,setActiveTab}:Props) {
   };
   const updateDetail = async () => {
     try {
+      setLoading(true)
       const response = await UpdateAdminUserDetail(info, user._id)
       console.log(response)
-      if (response.message === "success") {
+      if (response?.message === "success") {
         mutate("single-user")
         toast({
           status: 'success',
           text: 'User Info Updated',
           duration: 3000
         });
+        setLoading(false)
         close()
       }
+      if (response?.error) {
+        toast({
+            status: 'error',
+            text: response?.error,
+            duration: 5000
+        });
+        setLoading(false)
+        // close()
+    }
     } catch (error) {
       console.log(error)
     }
@@ -59,7 +72,9 @@ export default function MyAccount({activeTab,setActiveTab}:Props) {
         </div>
         <div className="flex items-center gap-4">
           <FunctionalButton noIcn text='Discard' txtClr='text-[#344054]' bgClr='#ffff' clx='border border-[#D0D5DD]' />
-          <FunctionalButton click={updateDetail} noIcn text='Save changes' />
+          {/* <FunctionalButton click={updateDetail} noIcn text='Save changes' /> */}
+          <FunctionalButton disable={loading} click={updateDetail} noIcn text={loading? "Saving...":"Save changes"} />
+
         </div>
       </div>
       <div className='flex flex-col gap-8'>
@@ -117,8 +132,8 @@ export default function MyAccount({activeTab,setActiveTab}:Props) {
                   <label className="auth-label">
                     Role
                   </label>
-                  <select defaultValue={info.role} className="auth-input-container !w-full auth-input">
-                    <option>{info.role}</option>
+                  <select defaultValue={user.role[0]} className="auth-input-container !w-full auth-input">
+                    <option>{user.role[0]}</option>
                   </select>
                 </div>
 
@@ -128,7 +143,7 @@ export default function MyAccount({activeTab,setActiveTab}:Props) {
 
         
 
-          <section className="flex flex-col gap-4 ">
+          {/* <section className="flex flex-col gap-4 ">
             <div className='flex justify-between items-center'>
               <p className="settings-text-bold">Login History & Active Sessions</p>
               <button className="xs-text !font-semibold !text-[#19499E]">Log out from all sessions</button>
@@ -160,7 +175,7 @@ export default function MyAccount({activeTab,setActiveTab}:Props) {
                 </div>
               ))}
             </div>
-          </section>
+          </section> */}
         </div>
       </div>
     </div>

@@ -12,7 +12,7 @@ import useSWR from 'swr';
 const AdminManagement = () => {
   const { initialData } = useAppContext()
   const { data: users = [], isLoading } = useSWR('all-users', BrowseAllUsers,{
-    refreshInterval:30000,
+    refreshInterval:5000,
     fallbackData:initialData.users
   }
   );
@@ -27,13 +27,11 @@ const AdminManagement = () => {
     setCurrentPage(1)
     return users.filter((item:User) => {
       const matchesSearch = item.fullName?.toLowerCase().includes(searchTerm?.toLowerCase()) || item.email?.toLowerCase().includes(searchTerm?.toLowerCase());
-      // const matchesCategory = categoryFilter === "all" || item.eventType. categoryFilter;
-      // return matchesSearch && matchesCategory;
-      setCurrentPage(1)
-      // slice(indexOfFirstItem, indexOfLastItem).
       return matchesSearch;
     }).filter((user:User) => user.role.includes("admin") || user.role.includes("superAdmin"))
-  }, [users, searchTerm])
+  }, [searchTerm, users])
+
+  // users
 
 //   useEffect(() => {
 //     const fetchEvents = async () => {

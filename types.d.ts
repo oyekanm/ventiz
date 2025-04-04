@@ -32,7 +32,7 @@ interface EventData {
 }
 
 type ticket = {
-  // createdAt: string;
+  createdAt: string;
   // eventId: string;
   description: string;
   free: boolean;

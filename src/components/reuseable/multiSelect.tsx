@@ -43,7 +43,7 @@ const MultiSelect = ({ addOptions, open, toggle, options, multi = true,desc,sing
         addOptions(newOption)
         setSelectedOptions(newOption)
     }
-    console.log(multiValue, selectedOptions)
+    console.log(singleValue)
     return (
         <div className="flex flex-col gap-4">
             {open && (<div className={`${small? "grid grid-cols-4 gap-4 items-center": "w-full"} `}>

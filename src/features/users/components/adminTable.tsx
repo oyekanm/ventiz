@@ -72,7 +72,7 @@ export default function AdminTable({ filteredItems, currentPage, setCurrentPage,
                                     <td className="td capitalize">{user.role[0]}</td>
                                     <td className="td">{formatDateWithAMPM(user?.lastLogin)}</td>
                                     <td className="td">
-                                        <button onClick={()=>setPayload(user)} className="text-blue-600 font-semibold hover:underline">Edit permissions</button>
+                                        <button  disabled={open}  onClick={()=>setPayload(user)} className="text-blue-600 font-semibold hover:underline">Edit permissions</button>
                                     </td>
 
                                 </tr>

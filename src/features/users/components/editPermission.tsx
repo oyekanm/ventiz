@@ -17,30 +17,44 @@ interface NotificationProps {
 
 export default function EditRoleForm({ close, admin }: NotificationProps) {
     const toast = useToast()
-    const roles = ['attendee', 'creator', 'admin', 'superAdmin', 'eventManager', 'ticketManager', 'systemAdmin']
+    const roles = ['attendee', 'creator', 'admin', 'superAdmin']
 
     const [adminData, setAdminData] = useState({
-        role: admin.role,
+        role: admin.role[0],
     })
+    const [loading, setLoading] = useState(false)
+
     const createAdmin = async () => {
         try {
+            setLoading(true)
             const response = await UpdateAdminUserDetail(adminData, admin._id)
             console.log(response)
-            if (response.message === "success") {
+            if (response?.error) {
+                toast({
+                    status: 'error',
+                    text: response?.error,
+                    duration: 5000
+                });
+                setLoading(false)
+                // close()
+            }
+            if (response?.message === "success") {
                 mutate("all-users")
                 toast({
                     status: 'success',
                     text: 'User Role Updated',
                     duration: 3000
                 });
+                setLoading(false)
                 close()
             }
+          
         } catch (error) {
             console.log(error)
         }
     }
 
-    const handleTags = (value: string[]) => {
+    const handleTags = (value: string) => {
         console.log(value)
         setAdminData(prev => ({
             ...prev,
@@ -48,7 +62,7 @@ export default function EditRoleForm({ close, admin }: NotificationProps) {
         }));
     }
 
-    // console.log(adminData, admin)
+    console.log(adminData, admin)
 
     return (
         <div className="fixed bg-[rgb(255, 255, 255)7] z-[10000] flex justify-center items-center backdrop-blur-[5px] bottom-0 left-0 right-0 top-0 h-full">
@@ -69,9 +83,10 @@ export default function EditRoleForm({ close, admin }: NotificationProps) {
                             <MultiSelect
                                 options={roles}
                                 open={true}
+                                multi={false}
                                 addOptions={handleTags}
                                 desc=''
-                                multiValue={adminData.role}
+                                singleValue={adminData.role}
                             />
                         </div>
                         <div>
@@ -132,7 +147,7 @@ export default function EditRoleForm({ close, admin }: NotificationProps) {
 
                 <div className="flex justify-end gap-4 p-4 border-t">
                     <FunctionalButton click={close} noIcn text='Cancel' txtClr='text-[#344054]' bgClr='#ffff' clx='border border-[#D0D5DD]' />
-                    <FunctionalButton click={createAdmin} noIcn text={"Save changes"} />
+                    <FunctionalButton disable={loading} click={createAdmin} noIcn text={loading? "Saving...":"Save changes"} />
                 </div>
             </div>
         </div >
