@@ -20,16 +20,24 @@ export default function MyAccount({activeTab,setActiveTab}:Props) {
   const toast = useToast()
   const [info, setInfo] = useState({
     fullName: user?.fullName,
-    // role: user?.role,
+    role: user?.role,
     email: user?.email
   })
   const [loading,setLoading] = useState(false)
 
   const [twoFactorEnabled, setTwoFactorEnabled] = useState(true);
 
+  const staleInfo = {
+    fullName: user?.fullName,
+    role: user?.role,
+    email: user?.email
+  }
+
+  // console.log()
+
   const handleInputChange = (e: any) => {
     const { name, value } = e.target;
-    console.log(value)
+    // console.log(value)
     setInfo(prev => ({
       ...prev,
       [name]: value
@@ -73,7 +81,7 @@ export default function MyAccount({activeTab,setActiveTab}:Props) {
         <div className="flex items-center gap-4">
           <FunctionalButton noIcn text='Discard' txtClr='text-[#344054]' bgClr='#ffff' clx='border border-[#D0D5DD]' />
           {/* <FunctionalButton click={updateDetail} noIcn text='Save changes' /> */}
-          <FunctionalButton disable={loading} click={updateDetail} noIcn text={loading? "Saving...":"Save changes"} />
+          <FunctionalButton disable={loading || JSON.stringify(info) === JSON.stringify(staleInfo)} click={updateDetail} noIcn text={loading? "Saving...":"Save changes"} />
 
         </div>
       </div>

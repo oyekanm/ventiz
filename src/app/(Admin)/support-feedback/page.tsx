@@ -10,31 +10,34 @@ import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 
 const Support = () => {
-  // const { data: supports = [] } = useSWR('all-supports', BrowseAllSupport, { 
-  //   suspense: true, 
-  //   // refreshInterval: 60000
-  //   fallbackData:[]
-  //  });
+  const {initialData} = useAppContext()
+  const { data: supports = [] } = useSWR('all-supports', BrowseAllSupport, { 
+    suspense: true, 
+    // refreshInterval: 60000
+    fallbackData:[]
+   });
   const [eventLoading, setEventLoading] = useState(false)
-  const [supports, setSupports] = useState<dispute[]>([])
 
-  useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        setEventLoading(true)
+  console.log(initialData.supports)
+  // const [supports, setSupports] = useState<dispute[]>([])
 
-        const support: any = await BrowseAllSupport();
-        //   console.log(data)
-        setSupports(support)
-        setEventLoading(false)
-      } catch (error) {
-        console.error("Error fetching events:", error);
-        setEventLoading(false)
-      }
-    };
+  // useEffect(() => {
+  //   const fetchEvents = async () => {
+  //     try {
+  //       setEventLoading(true)
 
-    fetchEvents();
-  }, []);
+  //       const support: any = await BrowseAllSupport();
+  //       //   console.log(data)
+  //       setSupports(support)
+  //       setEventLoading(false)
+  //     } catch (error) {
+  //       console.error("Error fetching events:", error);
+  //       setEventLoading(false)
+  //     }
+  //   };
+
+  //   fetchEvents();
+  // }, []);
   const pending = supports?.filter(item => item.status === "pending")
   const resolved = supports?.filter(item => item.status === "resolved")
   const open = supports?.filter(item => item.status === "open")

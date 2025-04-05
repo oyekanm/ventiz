@@ -31,9 +31,10 @@ export const authOptions: NextAuthOptions = {
        
         // if(response.message !== "success") return;
 
-        const user = response.data;
+        const user = response.user;
+        const token = response.token;
 
-        console.log(user.token,user._id);
+        console.log(token,user._id);
 
         // if (!response.statusText || !user.token) {
         //   throw new Error(user.message || "Authentication failed");
@@ -43,7 +44,7 @@ export const authOptions: NextAuthOptions = {
         return {
           id: user._id,
           email: credentials.email,
-          token: user.token,
+          token
           // Include any other user data you need
         };
       },

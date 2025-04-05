@@ -67,6 +67,7 @@ export async function GET(req: NextRequest) {
         { status: 400 }
       );
     }
+    console.log(`${url}/${types}/${ids}`)
     try {
       // Fetch data from your backend API
       const res = await fetch(`${url}/${types}/${ids}`, {

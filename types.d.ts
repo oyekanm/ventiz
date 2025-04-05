@@ -87,7 +87,7 @@ interface User {
   businessName: string;
   sessionId: string;
   website: string;
-  adminNotificationPreferences: adminPreference;
+  preference: adminPreference;
   userNotificationPreferences: userNotificationPreferences;
 }
 interface adminPreference {
@@ -113,7 +113,7 @@ interface adminPreference {
     eventReminder: boolean;
     refundDispute: boolean;
   };
-  frequency: string[]
+  frequency: string
 }
 
 interface notifications {
@@ -190,6 +190,7 @@ interface Payout {
   sortCode: number;
   accountNumber: number;
   isDefault: boolean;
+  email?:string
 }
 
 interface Attendees {

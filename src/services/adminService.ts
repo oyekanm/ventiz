@@ -66,6 +66,7 @@ export async function GetSingleUser(): Promise<any> {
 }
 
 export async function CreateAdmin(admin: Partial<User>) {
+  console.log(admin)
   try {
     const res = await client.post("admin", admin);
     if (!res.status) {
@@ -94,7 +95,7 @@ export async function UpdateAdminUserDetail(
     console.log(res);
     return await res.data;
   } catch (error:any) {
-    console.error("Error fetching data:", error.response.data);
+    console.error("Error fetching data:", error);
     return {error:error.response.data.error}
   }
 }
@@ -122,7 +123,7 @@ export async function UpdateUserNotification(admin: any, userId: string) {
   console.log(admin)
   try {
     const res = await client.patch(
-      `admin?type=update-user-notification&ids=${userId}`,
+      `admin?type=update-admin-notification&ids=${userId}`,
       admin
     );
     if (!res.status) {

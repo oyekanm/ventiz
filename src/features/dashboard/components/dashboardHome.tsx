@@ -1,6 +1,6 @@
 "use client"
 
-import { FunctionalButton, MetricsCard, SectionBlock, TimeFilter } from '@/components/reuseable';
+import { EmptyContainer, FunctionalButton, MetricsCard, SectionBlock, TimeFilter } from '@/components/reuseable';
 import { useAppContext } from '@/context/appContext';
 import { EventCard, EventCreateForm } from '@/features/events/components';
 import { NotificationCardContainer } from '@/features/notifications/components';
@@ -85,6 +85,8 @@ export default function DashboardHome() {
 
       {/* New Events*/}
       <SectionBlock title="Newly created events" link='/events' >
+      {events.length  === 0 && <EmptyContainer text='There are no event at the Moment' />}
+
         {events.length > 0 && (
           <div className="grid grid-cols-3 gap-6">
             {events.slice(0, 3).map(event => (
@@ -96,7 +98,7 @@ export default function DashboardHome() {
       {/* Recent Activity */}
       <SectionBlock title="Recent activity" link='/notifications'>
         {notification.length > 0 && (
-          <NotificationCardContainer item={notification.slice(0, 7)} />
+          <NotificationCardContainer item={[...notification].reverse().slice(0, 7)} />
         )}
       </SectionBlock>
     </div>

@@ -1,6 +1,6 @@
 "use client"
 
-import { DateRangeFilter, FunctionalButton, Loader, Pagination } from '@/components/reuseable';
+import { DateRangeFilter, EmptyContainer, FunctionalButton, Loader, Pagination } from '@/components/reuseable';
 import MultiSelect from '@/components/reuseable/multiSelect';
 import { useAppContext } from '@/context/appContext';
 import { EventCard, EventCreateForm, EventListing } from '@/features/events/components';
@@ -170,6 +170,8 @@ const EventPageContainer = () => {
                 </div>
             </div>
             {/* {eventLoading && <Loader />} */}
+            {!eventLoading && events.length  === 0 && <EmptyContainer text='There are no event at the Moment' />}
+
             {!eventLoading && events.length > 0 && (
                 <div className='grid gap-4'>
                     <div>

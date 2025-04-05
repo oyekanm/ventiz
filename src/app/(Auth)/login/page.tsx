@@ -16,8 +16,10 @@ import admin from "./../../../assets/images/admin-panel.png";
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoggingIn, setIsLoggingIn] = useState(false)
-  const [email, setEmail] = useState("adisa.adeolu@gmail.com")
-  const [password, setPassword] = useState("Z;x|)yJJ")
+  const [email, setEmail] = useState("enitanboluwatife5@gmail.com")
+  const [password, setPassword] = useState("@Vi[P!:w")
+  // const [email, setEmail] = useState("adisa.adeolu@gmail.com")
+  // const [password, setPassword] = useState("Z;x|)yJJ")
   // const [email,setEmail] = useState("mynextgmail@gmail.com")
   // const [password,setPassword] = useState("attendee1")
   const route = useRouter()

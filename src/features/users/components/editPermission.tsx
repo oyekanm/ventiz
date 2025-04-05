@@ -17,10 +17,10 @@ interface NotificationProps {
 
 export default function EditRoleForm({ close, admin }: NotificationProps) {
     const toast = useToast()
-    const roles = ['attendee', 'creator', 'admin', 'superAdmin']
+    const roles = ['admin', 'superAdmin']
 
     const [adminData, setAdminData] = useState({
-        role: admin.role[0],
+        role: admin.role,
     })
     const [loading, setLoading] = useState(false)
 
@@ -58,7 +58,7 @@ export default function EditRoleForm({ close, admin }: NotificationProps) {
         console.log(value)
         setAdminData(prev => ({
             ...prev,
-            role:value
+            role:[value]
         }));
     }
 
@@ -86,7 +86,7 @@ export default function EditRoleForm({ close, admin }: NotificationProps) {
                                 multi={false}
                                 addOptions={handleTags}
                                 desc=''
-                                singleValue={adminData.role}
+                                singleValue={adminData.role[0]}
                             />
                         </div>
                         <div>

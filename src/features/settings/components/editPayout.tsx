@@ -1,49 +1,23 @@
 import { FunctionalButton } from '@/components/reuseable'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Switch } from '@/components/ui/switch'
+import { useAppContext } from '@/context/appContext'
 import useToast from '@/hooks/useToast'
 import { CreateAdmin } from '@/services/adminService'
-import { CreateCard } from '@/services/supportService'
+import { CreateCard, UpdateCardDetail } from '@/services/supportService'
 import axios from 'axios'
 import { ChevronDown, Mail, MapPinIcon, UserRound, X } from 'lucide-react'
 import React, { useState } from 'react'
 import { mutate } from 'swr'
 
+interface EventsProps {
+    close: any,
+    payouts: Payout
+}
 
-
-export default function PayoutCreateForm({ close }: ModalProps) {
-    const [payout, setPayout] = useState({
-        email: "",
-        country: "",
-        countryCurrency: "",
-        owner: "company",
-        firstName: "",
-        lastName: "",
-        address: "",
-        city: "",
-        postalCode: "",
-        countryAddress: "",
-        accountType: "checkings",
-        bankName: "",
-        sortCode: 0,
-        accountNumber: 0,
-        isDefault: false
-        // "country": "UK",
-        // "countryCurrency": "USD",
-        // "owner": "individual",
-        // "firstName": "John",
-        // "lastName": "Doe",
-        // "address": "123 Main St",
-        // "city": "New York",
-        // "postalCode": "10001",
-        // "countryAddress": "USA",
-        // "accountType": "savings",
-        // "bankName": "Bank of America",
-        // "sortCode": 123456,
-        // "accountNumber": 987654321,
-        // "isDefault": true
-      
-    })
+export default function PayoutEdit({ close,payouts }: EventsProps) {
+    const {user} = useAppContext()
+    const [payout, setPayout] = useState(payouts)
     const [loading, setLoading] = useState(false)
     const toast = useToast()
 
@@ -60,7 +34,7 @@ export default function PayoutCreateForm({ close }: ModalProps) {
 
         try {
             setLoading(true)
-            const response = await CreateCard(payout)
+            const response = await UpdateCardDetail(payout,user._id)
             console.log(response)
             if (response?.error) {
                 toast({
@@ -456,7 +430,7 @@ export default function PayoutCreateForm({ close }: ModalProps) {
                 <div className="flex justify-end space-x-4 mt-4 p-4 border-t">
                     <FunctionalButton click={close} noIcn text='Cancel' txtClr='text-[#344054]' bgClr='#ffff' clx='border border-[#D0D5DD]' />
                     {/* <FunctionalButton click={createPayout} noIcn text={"Add payout account"} /> */}
-                    <FunctionalButton disable={loading} click={createPayout} noIcn text={loading ? "Adding account..." : "Add payout account"} />
+                    <FunctionalButton disable={loading} click={createPayout} noIcn text={loading ? "Saving..." : "Save Changes"} />
                 </div>
             </div >
         </div >

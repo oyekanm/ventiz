@@ -61,7 +61,7 @@ export default function DateRangeFilter({ onDateRangeChange }:Props) {
 
       
       {datePickerOpen && (
-        <div id="date-range-picker" className="centre !top-[5%]">
+        <div id="date-range-picker" className="centre !top-[10%]">
           <DateRangePicker
             ranges={[dateRange]}
             onChange={handleDateRangeChange}

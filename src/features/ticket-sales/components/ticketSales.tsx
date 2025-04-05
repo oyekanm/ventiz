@@ -1,6 +1,6 @@
 "use client"
 
-import { Loader, Pagination } from '@/components/reuseable';
+import { EmptyContainer, Loader, Pagination } from '@/components/reuseable';
 import { useAppContext } from '@/context/appContext';
 import { BrowseAllBooking } from '@/services/eventService';
 import React, { useState } from 'react'
@@ -50,7 +50,9 @@ export default function TicketSalesComponent({allBookings}:Props) {
     return (
         <div className='flex flex-col gap-4'>
             <p className='sm-text !font-semibold'>Ticket Sales</p>
-            {groupedTicketsArray.length > 0 && (
+            {allBookings.length  === 0 && <EmptyContainer text='We do not have any booking at the Moment' />}
+
+            {allBookings.length > 0 && groupedTicketsArray.length > 0 && (
             <div className="bg-white rounded-lg border mb-8">
                 <table className="w-full">
                     <thead>

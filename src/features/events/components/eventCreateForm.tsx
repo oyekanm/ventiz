@@ -28,6 +28,7 @@ const EventCreateForm = ({ close }: ModalProps) => {
     const eventTags = ["Farming", "Innovation", "Agriculture", "Tech", "business", "theatre arts"]
     // "creatorId": `${user._id}`,
     const [eventData, setEventData] = useState({
+        // "creatorId": `67eff866197912106ea87550`,
         "creatorId": `${user._id}`,
         "creatorBusinessName": "3ventizadmin",
         "name": "",
@@ -164,7 +165,7 @@ const EventCreateForm = ({ close }: ModalProps) => {
     }
     console.log(eventData.url?.length)
     function saveImage(url: any) {
-      
+
         setEventData((prev: any) => {
             return {
                 ...prev,
@@ -182,14 +183,13 @@ const EventCreateForm = ({ close }: ModalProps) => {
         }
         setSending(true)
         try {
-               const controller = new AbortController();
             const response = await axios.post("/api/events", eventData, {
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: `Bearer ${user.token}`
+                    // Authorization: `Bearer ${user.token}`
                 },
             });
-            
+
             console.log(response)
             if (response.data.message === "success") {
                 setSending(false)
@@ -203,11 +203,21 @@ const EventCreateForm = ({ close }: ModalProps) => {
             }
         } catch (error: any) {
             console.error('Form submission error:', error);
-            toast({
-                status: 'error',
-                text: error.response.data.error,
-                duration: 3000
-            });
+            setSending(false)
+            if (error.response.data.error === "TypeError: Cannot convert undefined or null to object") {
+                toast({
+                    status: 'error',
+                    text: "Please fill all required details",
+                    duration: 5000
+                });
+                return;
+            } else {
+                toast({
+                    status: 'error',
+                    text: error.response.data.error,
+                    duration: 5000
+                });
+            }
         }
     }
 
@@ -299,7 +309,7 @@ const EventCreateForm = ({ close }: ModalProps) => {
         }));
     }
     const handleTags = (value: string[]) => {
-        setEventData(prev => ({
+        setEventData((prev:any) => ({
             ...prev,
             eventTag: value
         }));
@@ -317,7 +327,7 @@ const EventCreateForm = ({ close }: ModalProps) => {
 
     };
 
-    const changeActiveTab = (text:string)=>{
+    const changeActiveTab = (text: string) => {
         setActiveTab(text)
         console.log(validateBasicInfo(eventData))
     }
@@ -896,7 +906,7 @@ const EventCreateForm = ({ close }: ModalProps) => {
                     // bgClr='#98A2B3' clx='border border-[#98A2B3]' 
                     />
                     }
-                    {sending && <FunctionalButton disable={sending} noIcn text={"Creating Event..."} /> }
+                    {sending && <FunctionalButton disable={sending} noIcn text={"Creating Event..."} />}
                 </div>
             </div>
         </div >

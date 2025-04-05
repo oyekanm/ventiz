@@ -1,9 +1,9 @@
 import { EventPageContainer } from '@/features/events/components';
 
-// export const dynamic = 'force-dynamic';
+export const dynamic = 'force-dynamic';
 
 // // Set revalidation settings to ensure data freshness
-// export const revalidate = 0; 
+export const revalidate = 0; 
 const EventsManagement =  async() => {
   // const session = await getServerSession(authOptions);
   // if(session){

@@ -77,9 +77,9 @@ const TicketSales = () => {
   //   fetchEvents();
   // }, []);
 
-  const reduced = events.map(evt=>evt.creatorId)
+  // const reduced = events.map(evt=>evt.creatorId)
 
-  console.log(new Set(reduced))
+  // console.log(new Set(reduced))
 
   const pending = supports?.filter(item => item.status === "pending")
   const revenue = useMemo(() => {
@@ -133,7 +133,7 @@ const TicketSales = () => {
         </div>
       </div> */}
       {loading && <Loader />}
-      {!loading && allBookings.length > 0 && (
+      {!loading && (
         <TicketSalesComponent allBookings={allBookings} />)}
 
       {/* <RecentTransactions /> */}

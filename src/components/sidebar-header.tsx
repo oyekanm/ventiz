@@ -105,8 +105,8 @@ export default function SidebarHeader() {
             </div>
             <div >
               <p className="xs-text !font-medium capitalize">{user?.fullName ? user?.fullName : "John Doe"}</p>
-              {/* <p className="xs-text capitalize">{user.role?user.role[0]:"SuperAdmin"}</p> */}
-              <p className="xs-text capitalize">{"SuperAdmin"}</p>
+              <p className="xs-text capitalize">{user?.role?user.role[0]:"SuperAdmin"}</p>
+              {/* <p className="xs-text capitalize">{"SuperAdmin"}</p> */}
             </div>
           </div>
         </div>

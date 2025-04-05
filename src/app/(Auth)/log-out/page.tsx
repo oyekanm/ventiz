@@ -1,6 +1,7 @@
 "use client"
 
 import axios from 'axios'
+import { signOut } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 
@@ -12,6 +13,7 @@ export default function Logout() {
             const resp = await axios.get("/api/auth/login")
             console.log(resp)
             if(resp.data.message === "success"){
+                // signOut()
                 route.push("/login")
             }
         }

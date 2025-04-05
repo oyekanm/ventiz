@@ -43,28 +43,51 @@ export default function NotificationTab({ activeTab, setActiveTab }: Props) {
   const [loading, setLoading] = useState(false)
   const [userNoti, setUserNoti] = useState({
     general: {
-      email: user?.adminNotificationPreferences?.general.types.email,
-      sms: user?.adminNotificationPreferences?.general.types.sms,
-      push: user?.adminNotificationPreferences?.general.types.push,
-      enableNotifications: user?.adminNotificationPreferences?.general.enableNotifications
+      email: user?.preference?.general.types.email,
+      sms: user?.preference?.general.types.sms,
+      push: user?.preference?.general.types.push,
+      enableNotifications: user?.preference?.general.enableNotifications
     },
     ticketAndEvent: {
-      ticketPurchase: user?.adminNotificationPreferences?.ticketAndEvent.ticketPurchase,
-      eventCreation: user?.adminNotificationPreferences?.ticketAndEvent.eventCreation,
-      eventReminder: user?.adminNotificationPreferences?.ticketAndEvent.eventReminder,
-      refundDispute: user?.adminNotificationPreferences?.ticketAndEvent.refundDispute
+      ticketPurchase: user?.preference?.ticketAndEvent.ticketPurchase,
+      eventCreation: user?.preference?.ticketAndEvent.eventCreation,
+      eventReminder: user?.preference?.ticketAndEvent.eventReminder,
+      refundDispute: user?.preference?.ticketAndEvent.refundDispute
     },
     adminAndVendor: {
-      newEventCreation: user?.adminNotificationPreferences?.adminAndVendor.newEventCreation,
-      ticketSalesUpdate: user?.adminNotificationPreferences?.adminAndVendor.ticketSalesUpdate,
-      lowTicketWarning: user?.adminNotificationPreferences?.adminAndVendor.lowTicketWarning,
-      refundRequestAlert: user?.adminNotificationPreferences?.adminAndVendor.refundRequestAlert,
-      newVendorApplicationApproval: user?.adminNotificationPreferences?.adminAndVendor.newVendorApplicationApproval,
-      paymentProcessing: user?.adminNotificationPreferences?.adminAndVendor.paymentProcessing
+      newEventCreation: user?.preference?.adminAndVendor.newEventCreation,
+      ticketSalesUpdate: user?.preference?.adminAndVendor.ticketSalesUpdate,
+      lowTicketWarning: user?.preference?.adminAndVendor.lowTicketWarning,
+      refundRequestAlert: user?.preference?.adminAndVendor.refundRequestAlert,
+      newVendorApplicationApproval: user?.preference?.adminAndVendor.newVendorApplicationApproval,
+      paymentProcessing: user?.preference?.adminAndVendor.paymentProcessing
     },
-    frequency: user?.adminNotificationPreferences?.frequency
-
+    frequency: user?.preference?.frequency
   })
+  const staleInfo = {
+    general: {
+      email: user?.preference?.general.types.email,
+      sms: user?.preference?.general.types.sms,
+      push: user?.preference?.general.types.push,
+      enableNotifications: user?.preference?.general.enableNotifications
+    },
+    ticketAndEvent: {
+      ticketPurchase: user?.preference?.ticketAndEvent.ticketPurchase,
+      eventCreation: user?.preference?.ticketAndEvent.eventCreation,
+      eventReminder: user?.preference?.ticketAndEvent.eventReminder,
+      refundDispute: user?.preference?.ticketAndEvent.refundDispute
+    },
+    adminAndVendor: {
+      newEventCreation: user?.preference?.adminAndVendor.newEventCreation,
+      ticketSalesUpdate: user?.preference?.adminAndVendor.ticketSalesUpdate,
+      lowTicketWarning: user?.preference?.adminAndVendor.lowTicketWarning,
+      refundRequestAlert: user?.preference?.adminAndVendor.refundRequestAlert,
+      newVendorApplicationApproval: user?.preference?.adminAndVendor.newVendorApplicationApproval,
+      paymentProcessing: user?.preference?.adminAndVendor.paymentProcessing
+    },
+    frequency: user?.preference?.frequency
+  }
+  console.log(userNoti,user)
   const handleTicketChange = (field: string, name: string, value: any) => {
     if (field === "general") {
       setUserNoti(prev => {
@@ -138,7 +161,7 @@ export default function NotificationTab({ activeTab, setActiveTab }: Props) {
     console.log(value)
     setUserNoti((prev: any) => ({
       ...prev,
-      frequency: [value]
+      frequency: value
     }));
   }
   return (
@@ -151,7 +174,7 @@ export default function NotificationTab({ activeTab, setActiveTab }: Props) {
         <div className="flex items-center gap-4">
           <FunctionalButton noIcn text='Discard' txtClr='text-[#344054]' bgClr='#ffff' clx='border border-[#D0D5DD]' />
           {/* <FunctionalButton click={updateNotification} noIcn text='Save changes' /> */}
-          <FunctionalButton disable={loading} click={updateNotification} noIcn text={loading ? "Saving..." : "Save changes"} />
+          <FunctionalButton disable={loading || JSON.stringify(userNoti) === JSON.stringify(staleInfo)} click={updateNotification} noIcn text={loading ? "Saving..." : "Save changes"} />
 
         </div>
       </div>
@@ -324,7 +347,7 @@ export default function NotificationTab({ activeTab, setActiveTab }: Props) {
                   addOptions={handleTags}
                   desc=''
                   multi={false}
-                  singleValue={userNoti?.frequency[0]}
+                  singleValue={userNoti?.frequency}
                 />
               </div>
             </div>

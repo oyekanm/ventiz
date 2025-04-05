@@ -36,6 +36,7 @@ export async function GET(req: NextRequest) {
   const end = urls.searchParams.get("end");
 
   // console.log(`${url}/${end}`);
+  console.log(auth)
 
   if (id) {
     try {
@@ -50,7 +51,7 @@ export async function GET(req: NextRequest) {
       });
       const data = await res.json();
 
-      // console.log(data);
+      console.log(data,res);
 
       if (res.status !== 200) {
         return NextResponse.json(
@@ -169,11 +170,13 @@ export async function POST(req: NextRequest) {
     });
     const data = await res.json();
 
+    // console.log(data)
+
     if (res.status !== 201) {
       return NextResponse.json({ error: data.message }, { status: res.status });
     }
 
-    console.log(data);
+    // console.log(data);
     return NextResponse.json({ message: data.message });
   } catch (error) {
     console.log(error);
@@ -199,15 +202,18 @@ export async function PATCH(req: NextRequest) {
 
   // console.log(`${url}/${type}/${ids}`,body)
 
+
   // console.log(token, body, end);
   if (ids && type) {
-    const validTypes = ["update-admin", "update-user-notification", "admin-security"];
+    const validTypes = ["update-admin", "update-admin-notification", "admin-security"];
     if (!validTypes.includes(type!)) {
       return NextResponse.json(
         { error: "Invalid type parameter" },
         { status: 400 }
       );
     }
+
+    console.log(`${url}/${type}/${ids}`)
     try {
       // Fetch data from your backend API
       const res = await fetch(`${url}/${type}/${ids}`, {
