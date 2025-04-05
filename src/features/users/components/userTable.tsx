@@ -47,13 +47,13 @@ export default function UserTable({filteredItems,currentPage,setCurrentPage}:Pro
     }
   
     const setPayload = (noti: any) => {
-      setUser(noti)
+      // setUser(noti)
       openModal()
     }
 
   return (
     <div className="bg-white rounded-lg border">
-        {open && <UserDetailModal user={user} close={() => openModal()} />}
+        {open && <UserDetailModal  close={() => openModal()} />}
     <table className="w-full">
       <thead>
         <tr className="border-b h-[4.4rem]  ">
