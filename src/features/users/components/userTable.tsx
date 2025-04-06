@@ -4,6 +4,8 @@ import { Pagination, UserInfoCard } from '@/components/reuseable';
 import { formatDateWithAMPM } from '@/utils/dateFormatter';
 import React, { useState } from 'react'
 import UserDetailModal from './userDetailModal';
+import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 interface Props {
     filteredItems:User[],
@@ -13,6 +15,9 @@ interface Props {
 
 export default function UserTable({filteredItems,currentPage,setCurrentPage}:Props) {
     const [open, setOpen] = useState(false)
+    const param = useSearchParams()
+    const route = useRouter()
+    const id = param.get("id")
     const itemsPerPage = 10
     
     const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
@@ -38,22 +43,23 @@ export default function UserTable({filteredItems,currentPage,setCurrentPage}:Pro
     };
   
     const openModal = () => {
-      setOpen(!open)
-      if (document.body.style.overflow !== "hidden") {
-        document.body.style.overflow = "hidden";
-      } else {
-        document.body.style.overflow = "scroll";
-      }
+      // setOpen(!open)
+      // if (document.body.style.overflow !== "hidden") {
+      //   document.body.style.overflow = "hidden";
+      // } else {
+      //   document.body.style.overflow = "scroll";
+      // }
+      route.push("?id=")
     }
   
     const setPayload = (noti: any) => {
       // setUser(noti)
       openModal()
     }
-
+console.log(id)
   return (
     <div className="bg-white rounded-lg border">
-        {open && <UserDetailModal  close={() => openModal()} />}
+        {id && <UserDetailModal  close={() => openModal()} />}
     <table className="w-full">
       <thead>
         <tr className="border-b h-[4.4rem]  ">
@@ -84,7 +90,8 @@ export default function UserTable({filteredItems,currentPage,setCurrentPage}:Pro
               </span>
             </td>
             <td className="td">
-              <button disabled={open} onClick={() => setPayload(user)} className="text-blue-600 font-medium hover:underline">View details</button>
+              {/* <button disabled={open} onClick={() => setPayload(user)} className="text-blue-600 font-medium hover:underline">View details</button> */}
+              <Link href={`?id=${user._id}`} className="text-blue-600 font-medium hover:underline">View details</Link>
             </td>
 
           </tr>

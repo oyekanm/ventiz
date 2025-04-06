@@ -61,6 +61,7 @@ const UserDetailModal = ({ close }: EventsProps) => {
                 "newVendorApplicationApproval": true,
                 "paymentProcessing": true
             },
+            "userId": "67eff866197912106ea87550",
             "frequency": "daily",
         },
     }
@@ -347,7 +348,7 @@ const UserDetailModal = ({ close }: EventsProps) => {
                 <div className="flex justify-end space-x-4 p-4 border-t ">
                     <FunctionalButton disable={isDisable} click={initiator} noIcn text={isDisable ? 'In progress...' : 'Disable account'} txtClr='text-[#344054]' bgClr='#ffff' clx='border border-[#D0D5DD]' />
                     {/* <FunctionalButton noIcn text="Save changes" bgClr='#221FCB' clx='border border-[#98A2B3]' /> */}
-                    <FunctionalButton disable={loading} click={createAdmin} noIcn text={loading ? "Saving..." : "Save changes"} />
+                    {/* <FunctionalButton disable={loading} click={createAdmin} noIcn text={loading ? "Saving..." : "Save changes"} /> */}
 
                 </div>
             </div>
