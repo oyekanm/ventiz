@@ -21,7 +21,7 @@ import { useAppContext } from "@/context/appContext"
 
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
- const {navData} = useAppContext()
+ const {navData} = useAppContext() 
 
  
   return (

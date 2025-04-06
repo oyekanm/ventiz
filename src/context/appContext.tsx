@@ -52,7 +52,7 @@ export default function AppProvider({ children, initialUser, initialData }: { ch
   const path = usePathname()
   const { data: user, mutate } = useSWR("single-user", GetSingleUser, {
     fallbackData: initialData.user,
-    refreshInterval: 5000
+    // refreshInterval: 5000
   });
 //   const [events, setEvents] = useState<EventData[]>([]);
 //   const [eventLoading, setEventLoading] = useState(false)

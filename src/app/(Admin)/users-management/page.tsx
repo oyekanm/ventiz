@@ -1,24 +1,19 @@
 "use client"
 
-import { DateRangeFilter, FunctionalButton, Loader, Pagination, UserInfoCard } from '@/components/reuseable';
+import { DateRangeFilter } from '@/components/reuseable';
 import { useAppContext } from '@/context/appContext';
-import UserDetailModal from '@/features/users/components/userDetailModal';
 import UserTable from '@/features/users/components/userTable';
-import { useFetchData } from '@/hooks/useFetchData';
-import { useUsers } from '@/hooks/useReuseableSwr';
 import { BrowseAllUsers } from '@/services/adminService';
-import { formatDateWithAMPM } from '@/utils/dateFormatter';
-import { ArrowLeft, ArrowRight, Calendar, Filter, ListFilter, Search, SlidersHorizontal } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
-import { DateRange } from 'react-date-range';
-import useSWR, { preload } from 'swr';
+import { Search } from 'lucide-react';
+import { useMemo, useState } from 'react';
+import useSWR from 'swr';
 
 
 
 export default function UserManagement() {
   const { initialData } = useAppContext()
   const { data: users = [] } = useSWR('all-users', BrowseAllUsers, {
-    refreshInterval: 30000,
+    // refreshInterval: 30000,
     fallbackData: initialData.users
   });
 

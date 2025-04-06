@@ -12,13 +12,12 @@ import useSWR from 'swr';
 const Support = () => {
   const {initialData} = useAppContext()
   const { data: supports = [] } = useSWR('all-supports', BrowseAllSupport, { 
-    suspense: true, 
     // refreshInterval: 60000
     fallbackData:[]
    });
   const [eventLoading, setEventLoading] = useState(false)
 
-  console.log(initialData.supports)
+  // console.log(initialData.supports)
   // const [supports, setSupports] = useState<dispute[]>([])
 
   // useEffect(() => {
@@ -42,39 +41,7 @@ const Support = () => {
   const resolved = supports?.filter(item => item.status === "resolved")
   const open = supports?.filter(item => item.status === "open")
 
-  const chatMessages = [
-    {
-      id: 1,
-      user: 'John Doe',
-      message: "Hi Admin, I'm having trouble accessing my account. Could you please assist? Thanks!",
-      timestamp: '2 mins ago'
-    },
-    {
-      id: 2,
-      user: 'John Doe',
-      message: "Hi Admin, I'm having trouble accessing my account. Could you please assist? Thanks!",
-      timestamp: '2 mins ago'
-    },
-    {
-      id: 13,
-      user: 'John Doe',
-      message: "Hi Admin, I'm having trouble accessing my account. Could you please assist? Thanks!",
-      timestamp: '2 mins ago'
-    },
-    {
-      id: 41,
-      user: 'John Doe',
-      message: "Hi Admin, I'm having trouble accessing my account. Could you please assist? Thanks!",
-      timestamp: '2 mins ago'
-    },
-    {
-      id: 61,
-      user: 'John Doe',
-      message: "Hi Admin, I'm having trouble accessing my account. Could you please assist? Thanks!",
-      timestamp: '2 mins ago'
-    },
-    // Add more messages as needed
-  ];
+ 
 
   const overview = [
     { title: 'Total open tickets', value: open.length, url: "/open-tickets" },

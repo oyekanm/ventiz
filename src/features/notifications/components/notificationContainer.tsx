@@ -15,7 +15,7 @@ export default function NotificationContainer() {
     const { data: notification = [] } = useSWR('all-notification', BrowseAllNotifications, {
         // suspense: true,
         fallbackData:initialData.notifications,
-        refreshInterval: 5000,
+        // refreshInterval: 5000,
     });
     // const [notification, setNotification] = useState<notifications[]>(initialData.notifications)
     const [marking, setMarking] = useState(false)

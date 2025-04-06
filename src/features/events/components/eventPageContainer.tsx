@@ -19,18 +19,11 @@ const EventPageContainer = () => {
 
     const { data: events = [], isLoading } = useSWR('all-events', BrowseAllEvents, {
         fallbackData: initialData.events || [],
-        refreshInterval: 5000,
-        // Enable refetching on window focus
-        // revalidateOnFocus: true,
-        // Enable refetching on network reconnection
-        // revalidateOnReconnect: true,
-        // Dedupe requests within this time frame
-        // dedupingInterval: 1000
     });
 
     // const [events, setEvents] = useState<EventData[]>(initialData.events);
     const [eventLoading, setEventLoading] = useState(false)
-    console.log(events, initialData.events)
+    // console.log(events, initialData.events)
     const [activeTab, setActiveTab] = useState("view")
     const [searchTerm, setSearchTerm] = useState("");
     // const [categoryFilter, setCategoryFilter] = useState<string[]>([]);
