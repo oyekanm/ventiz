@@ -12,65 +12,19 @@ import { formatDateWithAMPM } from '@/utils/dateFormatter';
 
 interface EventsProps {
     close: any,
-    // user: User
+    user: User
 }
 
-const UserDetailModal = ({ close }: EventsProps) => {
+const UserDetailModal = ({ close, user }: EventsProps) => {
     const roles = ['attendee', 'creator', 'admin', 'superAdmin']
-    const user = {
-        "categories": [],
-        "industry": [],
-        "_id": "67eff866197912106ea87550",
-        "email": "enitanboluwatife5@gmail.com",
-        "subscribe": true,
-        "isVerified": true,
-        "isOnboard": true,
-        "mfa": false,
-        "fullName": "enitan boluwatife",
-        "url": "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp",
-        "phone": "+445986594345",
-        "status": "approved",
-        "role": [
-            "superAdmin"
-        ],
-        "createdAt": "2025-04-04T15:19:02.027Z",
-        "updatedAt": "2025-04-05T19:25:47.545Z",
-        "businessName": "3ventiz Admin",
-        "v": 0,
-        "lastLogin": "2025-04-05T18:34:39.709Z",
-        "preference": {
-            "general": {
-                "types": {
-                    "email": true,
-                    "sms": true,
-                    "push": true
-                },
-                "enableNotifications": false
-            },
-            "ticketAndEvent": {
-                "ticketPurchase": true,
-                "eventCreation": true,
-                "eventReminder": true,
-                "refundDispute": true
-            },
-            "adminAndVendor": {
-                "newEventCreation": true,
-                "ticketSalesUpdate": true,
-                "lowTicketWarning": true,
-                "refundRequestAlert": true,
-                "newVendorApplicationApproval": true,
-                "paymentProcessing": true
-            },
-            "userId": "67eff866197912106ea87550",
-            "frequency": "daily",
-        },
-    }
+   
     const { data: allBookings = [] } = useSWR('all-bookings', BrowseAllBooking, {
         // refreshInterval: 60000
     });
     const toast = useToast()
     const booking = allBookings.filter(bk => bk.userId === user._id)
    
+    const [loading, setLoading] = useState(false)
     const [isDisable, setIsDisable] = useState(false)
 
   

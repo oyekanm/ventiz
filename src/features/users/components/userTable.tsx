@@ -43,23 +43,23 @@ export default function UserTable({filteredItems,currentPage,setCurrentPage}:Pro
     };
   
     const openModal = () => {
-      // setOpen(!open)
-      // if (document.body.style.overflow !== "hidden") {
-      //   document.body.style.overflow = "hidden";
-      // } else {
-      //   document.body.style.overflow = "scroll";
-      // }
-      route.push("?id=")
+      setOpen(!open)
+      if (document.body.style.overflow !== "hidden") {
+        document.body.style.overflow = "hidden";
+      } else {
+        document.body.style.overflow = "scroll";
+      }
+      // route.push("?id=")
     }
   
     const setPayload = (noti: any) => {
-      // setUser(noti)
+      setUser(noti)
       openModal()
     }
-console.log(id)
+// console.log(id)
   return (
     <div className="bg-white rounded-lg border">
-        {id && <UserDetailModal  close={() => openModal()} />}
+        {open && <UserDetailModal  user={user} close={() => openModal()} />}
     <table className="w-full">
       <thead>
         <tr className="border-b h-[4.4rem]  ">
@@ -90,8 +90,8 @@ console.log(id)
               </span>
             </td>
             <td className="td">
-              {/* <button disabled={open} onClick={() => setPayload(user)} className="text-blue-600 font-medium hover:underline">View details</button> */}
-              <Link href={`?id=${user._id}`} className="text-blue-600 font-medium hover:underline">View details</Link>
+              <button disabled={open} onClick={() => setPayload(user)} className="text-blue-600 font-medium hover:underline">View details</button>
+              {/* <Link href={`?id=${user._id}`} className="text-blue-600 font-medium hover:underline">View details</Link> */}
             </td>
 
           </tr>
