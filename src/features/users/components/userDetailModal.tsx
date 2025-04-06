@@ -66,84 +66,21 @@ const UserDetailModal = ({ close }: EventsProps) => {
         },
     }
     const { data: allBookings = [] } = useSWR('all-bookings', BrowseAllBooking, {
-        suspense: true,
         // refreshInterval: 60000
     });
     const toast = useToast()
     const booking = allBookings.filter(bk => bk.userId === user._id)
-    const [adminData, setAdminData] = useState({
-        role: user.role[0],
-    })
-    const [loading, setLoading] = useState(false)
+   
     const [isDisable, setIsDisable] = useState(false)
 
-    const createAdmin = async () => {
-        try {
-            setLoading(true)
-            const response = await UpdateAdminUserDetail(adminData, user._id)
-            console.log(response)
-            if (response?.error) {
-                toast({
-                    status: 'error',
-                    text: response?.error,
-                    duration: 5000
-                });
-                setLoading(false)
-                // close()
-            }
-            if (response?.message === "success") {
-                mutate("all-users")
-                toast({
-                    status: 'success',
-                    text: 'User Role Updated',
-                    duration: 3000
-                });
-                setLoading(false)
-                close()
-            }
-
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    const handleTags = (value: string) => {
-        console.log(value)
-        setAdminData(prev => ({
-            ...prev,
-            role: value
-        }));
-    }
+  
     // console.log(booking)
     // const { data: booking = [], error } = useSWR('user-booking',()=>GetUserBooking(user._id),{suspense:true});
     //  const [bookings, setbookings] 
 
-    const userData = {
-        name: "John Doe",
-        email: "john.doe@example.com",
-        avatar: "JD",
-        role: "Attendee",
-        contactNumber: "+44 20 7946 0958",
-        accountStatus: "Pending",
-        registrationDate: "Jan 13, 2024",
-        registrationTime: "09:44AM",
-        lastLoginDate: "Jan 13, 2024",
-        lastLoginTime: "09:44AM",
-        device: "MacBook Pro M3",
-        browser: "Chrome",
-        ticketHistory: [
-            { event: "Tech Summit 2024", type: "General Ad...", price: "Free", status: "Pending" },
-            { event: "Tech Summit 2024", type: "VIP", price: "$23", status: "Completed" },
-            { event: "Tech Summit 2024", type: "VIP", price: "$999", status: "Completed" },
-            { event: "Tech Summit 2024", type: "Early Bird", price: "Free", status: "Completed" }
-        ],
-        activeSessions: [
-            { device: "MacBook Pro M3", status: "Active Now", isActive: true },
-            { device: "ThinkPad X1 Carbon", lastSeen: "Jan 08, 2025; 08:45AM", isActive: false },
-            { device: "Spectre x360", lastSeen: "Jan 08, 2025; 08:45AM", isActive: true },
-            { device: "Surface Laptop Studio", lastSeen: "Jan 08, 2025; 08:45AM", isActive: false }
-        ]
-    };
+    const handleTags = (id:any) =>{}
+
+
     console.log(user)
 
     const disableAccount = async () => {
@@ -221,7 +158,7 @@ const UserDetailModal = ({ close }: EventsProps) => {
                                     multi={false}
                                     addOptions={handleTags}
                                     desc=''
-                                    singleValue={adminData.role}
+                                    singleValue={user.role[0]}
                                 />
                             </div>
                             <div>
