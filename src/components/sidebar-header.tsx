@@ -49,10 +49,12 @@ const links = [
 export default function SidebarHeader() {
   const path = usePathname()
   const { user,initialData } = useAppContext();
-  const { data: notification = [] } = useSWR('all-notification', BrowseAllNotifications, {
-    // refreshInterval: 5000,
-    fallbackData:initialData.notifications
-  });
+  // const { data: notification = [] } = useSWR('all-notification', BrowseAllNotifications, {
+  //   // refreshInterval: 5000,
+  //   fallbackData:initialData.notifications
+  // });
+
+  const notification = initialData.notifications
 
   const getStatusStyle = () => {
     let current

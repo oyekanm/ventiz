@@ -50,10 +50,11 @@ const AppContext = createContext<AppContextType>(null as any);
 
 export default function AppProvider({ children, initialUser, initialData }: { children: React.ReactNode, initialUser?: User | null, initialData: AppData; }) {
   const path = usePathname()
-  const { data: user, mutate } = useSWR("single-user", GetSingleUser, {
-    fallbackData: initialData.user,
-    // refreshInterval: 5000
-  });
+  const user = initialData.user
+  // const { data: user, mutate } = useSWR("single-user", GetSingleUser, {
+  //   fallbackData: initialData.user,
+  //   // refreshInterval: 5000
+  // });
 //   const [events, setEvents] = useState<EventData[]>([]);
 //   const [eventLoading, setEventLoading] = useState(false)
 //   const [notification, setNotification] = useState<notifications[]>([])
