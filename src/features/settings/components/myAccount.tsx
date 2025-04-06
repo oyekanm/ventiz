@@ -58,14 +58,13 @@ export default function MyAccount({activeTab,setActiveTab}:Props) {
       const response = await res?.json()
       console.log(response)
       if (response?.message === "success") {
-        mutate("single-user")
+        // mutate("single-user")
         toast({
           status: 'success',
           text: 'User Info Updated',
           duration: 3000
         });
         setLoading(false)
-        close()
       }
       if (response?.error) {
         toast({
