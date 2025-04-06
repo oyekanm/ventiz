@@ -214,36 +214,36 @@ export async function PATCH(req: NextRequest) {
     }
 
     console.log(`${url}/${type}/${ids}`)
-    // try {
-    //   // Fetch data from your backend API
-    //   const res = await fetch(`${url}/${type}/${ids}`, {
-    //     method: "PATCH",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       Authorization: `${token}`,
-    //     },
-    //     body: JSON.stringify(body),
-    //   });
+    try {
+      // Fetch data from your backend API
+      const res = await fetch(`${url}/${type}/${ids}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${token}`,
+        },
+        body: JSON.stringify(body),
+      });
 
-    //   const data = await res.json();
-    //   // console.log(data)
+      const data = await res.json();
+      // console.log(data)
 
 
-    //   if (res.status !== 200) {
-    //     return NextResponse.json(
-    //       { error: data.message },
-    //       { status: res.status }
-    //     );
-    //   }
+      if (res.status !== 200) {
+        return NextResponse.json(
+          { error: data.message },
+          { status: res.status }
+        );
+      }
 
-    //   return NextResponse.json(data);
-    // } catch (error) {
-    //   console.log(error);
-    //   return NextResponse.json(
-    //     { error: "Internal Server Error" },
-    //     { status: 500 }
-    //   );
-    // }
+      return NextResponse.json(data);
+    } catch (error) {
+      console.log(error);
+      return NextResponse.json(
+        { error: "Internal Server Error" },
+        { status: 500 }
+      );
+    }
   }
 
   // try {

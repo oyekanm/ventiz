@@ -141,7 +141,7 @@ export default function NotificationTab({ activeTab, setActiveTab }: Props) {
           duration: 3000
         });
         setLoading(false)
-        close()
+        // close()
       }
       if (response?.error) {
         toast({

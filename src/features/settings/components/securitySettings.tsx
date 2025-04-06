@@ -37,7 +37,14 @@ export default function SecuritySettings({ activeTab, setActiveTab }: Props) {
   )
 
   const UpdateSecurity = async () => {
-
+if(!securityInfo.securityQuestions[0].question || !securityInfo.securityQuestions[0].answer){
+  toast({
+    status: 'error',
+    text: 'Please fill out the text with the red asterick',
+    duration: 7000
+  });
+  return
+}
     try {
       setLoading(true)
       const response = await UpdateAdminUserSecurity(securityInfo, user._id)
@@ -54,11 +61,11 @@ export default function SecuritySettings({ activeTab, setActiveTab }: Props) {
       if (response?.message === "success") {
         toast({
           status: 'success',
-          text: 'User Role Updated',
+          text: 'User security info Updated',
           duration: 3000
         });
         setLoading(false)
-        close()
+        // close()
       }
 
     } catch (error) {
@@ -187,7 +194,7 @@ export default function SecuritySettings({ activeTab, setActiveTab }: Props) {
                   <div key={index} className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="auth-label">
-                        Security Question
+                        Security Question <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="text"
@@ -200,7 +207,7 @@ export default function SecuritySettings({ activeTab, setActiveTab }: Props) {
                     </div>
                     <div>
                       <label className="auth-label">
-                        Security Answer
+                        Security Answer <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="text"

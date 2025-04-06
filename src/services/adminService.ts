@@ -115,7 +115,7 @@ export async function UpdateAdminUserSecurity(
     console.log(res);
     return await res.data;
   } catch (error:any) {
-    console.error("Error fetching data:", error.response.data);
+    console.error("Error fetching data:", error);
     return {error:error.response.data.error}
   }
 }

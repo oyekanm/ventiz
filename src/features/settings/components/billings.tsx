@@ -22,7 +22,7 @@ export default function BillingsTab({activeTab,setActiveTab}:Props) {
 // cards
     const { data: cards,isLoading } = useSWR("user-card",()=> GetUserCard(user._id), {
         fallbackData: [],
-        refreshInterval: 5000
+        // refreshInterval: 5000
       });
     const [open, setOpen] = useState(false)
 
