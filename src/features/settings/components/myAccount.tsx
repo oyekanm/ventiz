@@ -46,7 +46,16 @@ export default function MyAccount({activeTab,setActiveTab}:Props) {
   const updateDetail = async () => {
     try {
       setLoading(true)
-      const response = await UpdateAdminUserDetail(info, user._id)
+      // const response = await UpdateAdminUserDetail(info, user._id)
+      const res = await fetch('https://9sxeaygjo0.execute-api.eu-north-1.amazonaws.com/update-admin/67eff866197912106ea87550', {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2VmZjg2NjE5NzkxMjEwNmVhODc1NTAiLCJlbWFpbCI6ImVuaXRhbmJvbHV3YXRpZmU1QGdtYWlsLmNvbSIsInN1YnNjcmliZSI6dHJ1ZSwiaXNWZXJpZmllZCI6dHJ1ZSwiaXNPbmJvYXJkIjp0cnVlLCJtZmEiOmZhbHNlLCJmdWxsTmFtZSI6ImVuaXRhbiBib2x1d2F0aWZlIiwidXJsIjoiaHR0cHM6Ly93d3cuZ3JhdmF0YXIuY29tL2F2YXRhci8wMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMD9kPW1wIiwicGhvbmUiOiIrNDQ1OTg2NTk0MzQ1Iiwic3RhdHVzIjoiYXBwcm92ZWQiLCJyb2xlIjpbInN1cGVyQWRtaW4iXSwiY3JlYXRlZEF0IjoiMjAyNS0wNC0wNFQxNToxOTowMi4wMjdaIiwidXBkYXRlZEF0IjoiMjAyNS0wNC0wNFQxNTozMjowOS4xMzVaIiwiYnVzaW5lc3NOYW1lIjoiM3ZlbnRpeiBBZG1pbiIsIl9fdiI6MCwibGFzdExvZ2luIjoiMjAyNS0wNC0wNFQxNTozMjowOS4xMzBaIiwiaWF0IjoxNzQzNzgwNzI5fQ.xoN2cN29OlEDyXBPxnLqbnxhZXfVUY2DtBSbU0Jo39o`,
+        },
+        body: JSON.stringify(info),
+      });
+      const response = await res?.json()
       console.log(response)
       if (response?.message === "success") {
         mutate("single-user")

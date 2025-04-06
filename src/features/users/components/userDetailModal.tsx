@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Calendar, CalendarPlus2, ChevronDown, Clock, CloudUpload, Eye, Globe, LockKeyhole, Map, MapPin, Upload, X } from 'lucide-react';
-import { FunctionalButton, MultiSelect, UserInfoCard } from '@/components/reuseable';
+import { FunctionalButton, Loader, MultiSelect, UserInfoCard } from '@/components/reuseable';
 import useSWR, { mutate } from 'swr';
 import { DisableUsers, GetUserBooking, UpdateAdminUserDetail } from '@/services/adminService';
 import useToast from '@/hooks/useToast';
@@ -18,8 +18,8 @@ interface EventsProps {
 const UserDetailModal = ({ close, user }: EventsProps) => {
     const roles = ['attendee', 'creator', 'admin', 'superAdmin']
    
-    const { data: allBookings = [] } = useSWR('all-bookings', BrowseAllBooking, {
-        // refreshInterval: 60000
+    const { data: allBookings = [],isLoading } = useSWR('all-bookings', BrowseAllBooking, {
+        refreshInterval: 2000
     });
     const toast = useToast()
     const booking = allBookings.filter(bk => bk.userId === user._id)
@@ -201,7 +201,8 @@ const UserDetailModal = ({ close, user }: EventsProps) => {
                     <hr className="" />
 
                     {/* Ticket History */}
-                    <UserTicketHistory ticketHistory={booking} />
+                    {isLoading && <Loader />}
+                    {!isLoading && <UserTicketHistory ticketHistory={booking} />}
 
                     {/* Divider */}
                     <hr className="my-6" />
@@ -237,7 +238,7 @@ const UserDetailModal = ({ close, user }: EventsProps) => {
                 </div>
 
                 <div className="flex justify-end space-x-4 p-4 border-t ">
-                    <FunctionalButton disable={isDisable} click={initiator} noIcn text={isDisable ? 'In progress...' : 'Disable account'} txtClr='text-[#344054]' bgClr='#ffff' clx='border border-[#D0D5DD]' />
+                    <FunctionalButton disable={isDisable || user.status === "disabled"} click={initiator} noIcn text={isDisable ? 'In progress...' : 'Disable account'} txtClr='text-[#344054]' bgClr='#ffff' clx='border border-[#D0D5DD]' />
                     {/* <FunctionalButton noIcn text="Save changes" bgClr='#221FCB' clx='border border-[#98A2B3]' /> */}
                     {/* <FunctionalButton disable={loading} click={createAdmin} noIcn text={loading ? "Saving..." : "Save changes"} /> */}
 
