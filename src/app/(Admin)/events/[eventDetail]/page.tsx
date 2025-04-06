@@ -14,13 +14,13 @@ const EventDetailsPage = async ({ params }: Props) => {
 
   
 
-  const data = await GetSingleEvent(eventDetail)
-  const attend = await GetSingleEventAttendies(eventDetail);
+  // const data = await GetSingleEvent(eventDetail)
+  // const attend = await GetSingleEventAttendies(eventDetail);
   
   // console.log(eventDetail, data, attend)
   return (
     <SingleEventDetail 
-     attend={attend} event={data}
+    //  attend={attend} event={data}
      eventDetail={eventDetail} />
   );
 };

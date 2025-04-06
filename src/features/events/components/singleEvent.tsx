@@ -17,11 +17,11 @@ import useToast from '@/hooks/useToast';
 
 type Props = {
     eventDetail: string,
-    event?: any,
-    attend?: any
+    // event?: any,
+    // attend?: any
 }
 
-export default function SingleEventDetail({ eventDetail,attend,event }: Props) {
+export default function SingleEventDetail({ eventDetail, }: Props) {
     const { initialData } = useAppContext()
     const route = useRouter()
     const toast = useToast()
@@ -34,16 +34,16 @@ export default function SingleEventDetail({ eventDetail,attend,event }: Props) {
     //         fallbackData: initialData.events
     //     });
 
-    // const { data: event, error, isLoading } = useSWR('single-event', () => GetSingleEvent(eventDetail),
-    //     {
-    //         refreshInterval: 5000,
-    //         fallbackData: {}
-    //     });
-    // const { data: attend } = useSWR('single-event-attendee', () => GetSingleEventAttendies(eventDetail), {
-    //     fallbackData: [],
-    //     refreshInterval: 30000,
-    // });
-    console.log(isLoading, eventDetail,event,attend)
+    const { data: event, error } = useSWR('single-event', () => GetSingleEvent(eventDetail),
+        {
+            // refreshInterval: 5000,
+            fallbackData: initialData.events.find(evt=>evt._id === eventDetail)
+        });
+    const { data: attend } = useSWR('single-event-attendee', () => GetSingleEventAttendies(eventDetail), {
+        fallbackData: [],
+        // refreshInterval: 30000,
+    });
+    console.log(initialData.events.find(evt=>evt._id === eventDetail),event,attend)
 
     const [open, setOpen] = useState(false)
     const [viewAttendees, setViewAttendees] = useState(false)
