@@ -33,12 +33,13 @@ export default function SingleEventDetail({ eventDetail, }: Props) {
     //     {
     //         fallbackData: initialData.events
     //     });
+    const event = initialData.events.find(evt=>evt._id === eventDetail)
 
-    const { data: event, error } = useSWR('single-event', () => GetSingleEvent(eventDetail),
-        {
-            // refreshInterval: 5000,
-            fallbackData: initialData.events.find(evt=>evt._id === eventDetail)
-        });
+    // const { data: event, error } = useSWR('single-event', () => GetSingleEvent(eventDetail),
+    //     {
+    //         // refreshInterval: 5000,
+    //         fallbackData: initialData.events.find(evt=>evt._id === eventDetail)
+    //     });
     const { data: attend } = useSWR('single-event-attendee', () => GetSingleEventAttendies(eventDetail), {
         fallbackData: [],
         // refreshInterval: 30000,
