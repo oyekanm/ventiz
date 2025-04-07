@@ -3,18 +3,35 @@
 import { EmptyContainer, Loader, SectionBlock, SummaryInfoColum } from '@/components/reuseable';
 import { useAppContext } from '@/context/appContext';
 import { ChatTable } from '@/features/support/components';
+import { useWebSocket } from '@/hooks/useWebsocket';
 import { BrowseAllSupport } from '@/services/supportService';
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 
+interface messages {
+  sender: string,
+  message: string,
+
+}
+
+type socket = {
+  messages: messages[],
+  sendMessage: (message: any) => void
+}
+
 const Support = () => {
   const {initialData} = useAppContext()
   const { data: supports = [] } = useSWR('all-supports', BrowseAllSupport, { 
-    // refreshInterval: 60000
+    refreshInterval: 2000,
     fallbackData:[]
    });
+   const { messages, sendMessage }: socket = useWebSocket(
+    `wss://vw8hufljm4.execute-api.eu-north-1.amazonaws.com/dev`,
+    // user.token
+    `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2VmZjg2NjE5NzkxMjEwNmVhODc1NTAiLCJlbWFpbCI6ImVuaXRhbmJvbHV3YXRpZmU1QGdtYWlsLmNvbSIsInN1YnNjcmliZSI6dHJ1ZSwiaXNWZXJpZmllZCI6dHJ1ZSwiaXNPbmJvYXJkIjp0cnVlLCJtZmEiOmZhbHNlLCJmdWxsTmFtZSI6ImVuaXRhbiBib2x1d2F0aWZlIiwidXJsIjoiaHR0cHM6Ly93d3cuZ3JhdmF0YXIuY29tL2F2YXRhci8wMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMD9kPW1wIiwicGhvbmUiOiIrNDQ1OTg2NTk0MzQ1Iiwic3RhdHVzIjoiYXBwcm92ZWQiLCJyb2xlIjpbInN1cGVyQWRtaW4iXSwiY3JlYXRlZEF0IjoiMjAyNS0wNC0wNFQxNToxOTowMi4wMjdaIiwidXBkYXRlZEF0IjoiMjAyNS0wNC0wNFQxNTozMjowOS4xMzVaIiwiYnVzaW5lc3NOYW1lIjoiM3ZlbnRpeiBBZG1pbiIsIl9fdiI6MCwibGFzdExvZ2luIjoiMjAyNS0wNC0wNFQxNTozMjowOS4xMzBaIiwiaWF0IjoxNzQzNzgwNzI5fQ.xoN2cN29OlEDyXBPxnLqbnxhZXfVUY2DtBSbU0Jo39o`
+);
   const [eventLoading, setEventLoading] = useState(false)
 
   // console.log(initialData.supports)
